@@ -1,0 +1,1171 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hiệu quả khai thác đội xe bồn – Tháng 9/2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#EEF2F5; --surface:#FFFFFF; --ink:#12222F; --muted:#5A6B7A; --line:#D8E0E7;
+  --accent:#0B7285; --accent-ink:#FFFFFF; --warn-bg:#FFF4D6; --warn-ink:#7A4B00;
+  --cell0:#E6ECF1; --soft:#F6F8FA; --bad:#B42318;
+  --font:'Be Vietnam Pro','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1822; --surface:#14232F; --ink:#E6EDF3; --muted:#9BABB9; --line:#27394A;
+    --accent:#35B5CC; --accent-ink:#06222A; --warn-bg:#3A2E0D; --warn-ink:#F4D58A;
+    --cell0:#1C2E3B; --soft:#112029; --bad:#FF8A80;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1822; --surface:#14232F; --ink:#E6EDF3; --muted:#9BABB9; --line:#27394A;
+  --accent:#35B5CC; --accent-ink:#06222A; --warn-bg:#3A2E0D; --warn-ink:#F4D58A;
+  --cell0:#1C2E3B; --soft:#112029; --bad:#FF8A80;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 56px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;font-variant-numeric:tabular-nums}
+.wrap{max-width:1320px;margin:0 auto;padding:18px 20px 56px}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* header */
+.top{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
+.top h1{margin:0;font-size:24px;line-height:1.25;font-weight:700;letter-spacing:-.01em}
+.top p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;font-weight:500;font-size:14px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--bad)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.banner{background:var(--warn-bg);color:var(--warn-ink);border-radius:8px;padding:9px 14px;margin-bottom:12px;font-weight:500;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+
+/* filters */
+.filters{display:flex;gap:18px 28px;flex-wrap:wrap;align-items:flex-end;padding:12px 0 14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:6px}
+.f-group{display:flex;flex-direction:column;gap:5px}
+.f-group>span{font-size:13px;color:var(--muted)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px 5px 9px;font-size:13.5px;font-weight:500}
+.chip i{width:10px;height:10px;border-radius:50%;background:var(--c);display:inline-block;border:2px solid var(--c)}
+.chip[aria-pressed="false"]{color:var(--muted)}
+.chip[aria-pressed="false"] i{background:transparent}
+.f-inline{display:flex;gap:6px;align-items:center}
+.f-inline select,.f-inline input{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 8px;min-width:64px}
+.f-inline input{width:72px}
+
+/* tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);margin:0 -4px 18px;padding:6px 4px 0}
+.tab{border:0;background:transparent;padding:9px 14px;font-weight:500;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+.tab .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-left:6px;vertical-align:middle}
+
+/* blocks */
+h2{font-size:18px;margin:26px 0 10px;font-weight:600;letter-spacing:-.005em}
+h2:first-child{margin-top:0}
+h3{font-size:15px;margin:0 0 8px;font-weight:600}
+.sub{color:var(--muted);font-size:13px;margin:0 0 10px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g2>*,.g3>*{min-width:0}
+@media (max-width:960px){.g2,.g3{grid-template-columns:1fr}}
+.chart{position:relative;height:300px}
+.chart.tall{height:360px}
+.note{color:var(--muted);font-size:13px}
+.insights{margin:0 0 18px;padding:0;list-style:none;display:grid;gap:6px}
+.insights li{padding:8px 12px;border-left:3px solid var(--accent);background:var(--surface);border-radius:0 8px 8px 0}
+
+/* KPI strip */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:18px;overflow:hidden}
+.kpi{padding:14px 16px;border-left:1px solid var(--line);border-top:1px solid var(--line);margin:-1px 0 0 -1px}
+.kpi .v{font-size:26px;font-weight:700;line-height:1.15;letter-spacing:-.01em}
+.kpi .v small{font-size:14px;font-weight:500;color:var(--muted);margin-left:3px}
+.kpi .l{font-size:13px;color:var(--muted);margin-top:2px}
+.kpi .s{font-size:12.5px;color:var(--muted);margin-top:4px}
+.kpi.empty .v{color:var(--muted);font-size:18px;font-weight:500}
+
+/* heatmap */
+.hm-scroll{overflow-x:auto;padding-bottom:4px}
+.hm{display:grid;grid-template-columns:116px repeat(var(--cols),minmax(30px,1fr));gap:3px;min-width:calc(116px + var(--cols)*33px)}
+.hm .h{font-size:11.5px;color:var(--muted);text-align:center;line-height:1.2;padding:2px 0}
+.hm .h.we{color:var(--ink);font-weight:600}
+.hm .rl{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;white-space:nowrap}
+.hm .rl i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.hm .c{border:0;height:34px;border-radius:4px;background:var(--cell0);font-size:11px;font-weight:600;color:var(--ink);padding:0}
+.hm .c.hi{color:var(--accent-ink)}
+.hm .c.sel{outline:2px solid var(--ink);outline-offset:1px}
+.hm .cnt{font-size:12px;text-align:center;color:var(--muted);padding-top:3px}
+.legend{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-top:8px}
+.legend .bar{width:140px;height:10px;border-radius:5px;background:linear-gradient(90deg,var(--cell0),var(--accent))}
+.detail{margin-top:10px;padding:10px 12px;background:var(--soft);border-radius:8px;font-size:13.5px;min-height:42px}
+
+/* tables */
+.scroll{overflow-x:auto}
+table.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th,.tbl td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.tbl th{font-weight:600;color:var(--muted);font-size:12.5px;background:var(--soft);position:sticky;top:0}
+.tbl th.s{cursor:pointer}
+.tbl th.s:hover{color:var(--ink)}
+.tbl td.n,.tbl th.n{text-align:right}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tfoot td{font-weight:600;border-top:2px solid var(--line);background:var(--soft)}
+.tbl .xe{display:inline-flex;align-items:center;gap:7px;font-weight:500}
+.tbl .xe i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.dim{color:var(--muted)}
+.bar-cell{display:inline-block;height:8px;border-radius:4px;background:var(--accent);vertical-align:middle;margin-right:6px;opacity:.85}
+
+/* import */
+.imp textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:10px;font-family:ui-monospace,Consolas,monospace;font-size:13px;resize:vertical}
+.imp .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.imp code,.fmt code{background:var(--soft);padding:1px 6px;border-radius:4px;font-size:12.5px}
+.msg{margin-top:8px;font-size:13.5px}
+.msg.ok{color:var(--accent)}
+.msg.err{color:var(--bad)}
+.empty-state{text-align:center;padding:26px 16px;color:var(--muted)}
+.empty-state strong{display:block;color:var(--ink);font-size:16px;margin-bottom:4px}
+select.sel{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:3px 6px;font-size:13px}
+.tag{display:inline-block;font-size:11.5px;padding:1px 7px;border-radius:999px;background:var(--soft);color:var(--muted);margin-left:6px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--surface);padding:5px 12px;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.price{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 0}
+.price input{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 8px;width:130px}
+.present .wrap{max-width:1500px}
+.present body,.present{font-size:17px}
+@media (max-width:640px){.wrap{padding:12px 12px 48px}.top h1{font-size:20px}.kpi .v{font-size:22px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>Hiệu quả khai thác đội xe bồn xăng dầu</h1>
+      <p>CTY SFT · Tháng 9/2026 · Nguồn: báo cáo GPS theo ngày và bảng chi phí xe</p>
+    </div>
+    <div class="actions">
+      <button class="btn" data-act="demo" id="btnDemo">Xem thử với dữ liệu mẫu</button>
+      <button class="btn" data-act="present" id="btnPresent">Toàn màn hình</button>
+    </div>
+  </div>
+  <div id="banner"></div>
+  <div class="filters" id="filters"></div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <main id="view"></main>
+</div>
+
+<script>
+(function(){
+"use strict";
+const DATA = [{"x":"50E-652.24","d":1,"w":"T3","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":2,"w":"T4","km":2.93,"a":"15:07:46","b":"15:27:45","vm":43,"va":11,"ov":0,"use":1184,"idle":672,"off":85186,"st":2,"span":1199,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":3,"w":"T5","km":251.33,"a":"07:07:04","b":"22:43:22","vm":96,"va":28,"ov":0,"use":39654,"idle":17458,"off":46716,"st":14,"span":56178,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":4,"w":"T6","km":0.0,"a":"15:55:30","b":"16:06:14","vm":0,"va":0,"ov":0,"use":630,"idle":630,"off":85740,"st":1,"span":644,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":5,"w":"T7","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":6,"w":"CN","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":7,"w":"T2","km":2.82,"a":"10:44:00","b":"21:47:04","vm":45,"va":12,"ov":0,"use":2183,"idle":1757,"off":84187,"st":3,"span":39784,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":8,"w":"T3","km":73.36,"a":"08:30:30","b":"15:07:02","vm":96,"va":32,"ov":0,"use":13965,"idle":8473,"off":71415,"st":6,"span":23792,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":9,"w":"T4","km":0.47,"a":"12:37:54","b":"18:13:09","vm":4,"va":4,"ov":0,"use":1079,"idle":1079,"off":83851,"st":2,"span":20115,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":10,"w":"T5","km":505.15,"a":"02:48:25","b":"21:15:13","vm":97,"va":42,"ov":0,"use":51869,"idle":17539,"off":29971,"st":9,"span":66408,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":11,"w":"T6","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":12,"w":"T7","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":13,"w":"CN","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":14,"w":"T2","km":0.0,"a":"08:39:42","b":"08:44:00","vm":6,"va":6,"ov":0,"use":0,"idle":0,"off":86370,"st":2,"span":258,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":15,"w":"T3","km":175.76,"a":"07:27:13","b":"17:22:08","vm":112,"va":38,"ov":0,"use":21837,"idle":10049,"off":60380,"st":6,"span":35695,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":16,"w":"T4","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":17,"w":"T5","km":160.07,"a":"12:35:58","b":"22:55:08","vm":97,"va":36,"ov":0,"use":16906,"idle":5255,"off":64352,"st":7,"span":37150,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":18,"w":"T6","km":315.53,"a":"08:00:46","b":"23:59:34","vm":111,"va":41,"ov":0,"use":27177,"idle":5838,"off":49057,"st":13,"span":57528,"r0":"TP.HCM","r1":"Đồng Nai","p0":"Nhà Bè, TP.HCM","p1":"Tân Phú, Đồng Nai"},{"x":"50E-652.24","d":19,"w":"T7","km":127.63,"a":"00:00:00","b":"02:48:32","vm":110,"va":45,"ov":1,"use":9161,"idle":800,"off":77209,"st":2,"span":10112,"r0":"Đồng Nai","r1":"TP.HCM","p0":"Tân Phú, Đồng Nai","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":20,"w":"CN","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":21,"w":"T2","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":22,"w":"T3","km":61.25,"a":"07:18:30","b":"14:30:53","vm":100,"va":27,"ov":0,"use":13743,"idle":9276,"off":72627,"st":9,"span":25943,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":23,"w":"T4","km":158.65,"a":"00:04:14","b":"11:59:22","vm":93,"va":33,"ov":0,"use":24646,"idle":12451,"off":61724,"st":12,"span":42908,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":24,"w":"T5","km":162.69,"a":"15:20:28","b":"23:59:30","vm":67,"va":28,"ov":0,"use":23324,"idle":8370,"off":63046,"st":8,"span":31142,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Linh Xuân, TP.HCM"},{"x":"50E-652.24","d":25,"w":"T6","km":26.0,"a":"00:00:00","b":"07:13:56","vm":60,"va":20,"ov":0,"use":7271,"idle":4607,"off":79099,"st":3,"span":26036,"r0":"TP.HCM","r1":"TP.HCM","p0":"Linh Xuân, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":26,"w":"T7","km":101.82,"a":"08:14:18","b":"16:45:35","vm":87,"va":26,"ov":0,"use":16407,"idle":7728,"off":69963,"st":12,"span":30677,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":27,"w":"CN","km":73.73,"a":"07:31:30","b":"12:51:20","vm":86,"va":27,"ov":0,"use":9908,"idle":3862,"off":76462,"st":12,"span":19190,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":28,"w":"T2","km":158.22,"a":"13:47:43","b":"22:03:57","vm":90,"va":33,"ov":0,"use":15026,"idle":1694,"off":71344,"st":10,"span":29774,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":29,"w":"T3","km":273.93,"a":"08:49:33","b":"20:02:37","vm":109,"va":35,"ov":0,"use":31291,"idle":9261,"off":55079,"st":10,"span":40384,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-652.24","d":30,"w":"T4","km":100.71,"a":"08:15:57","b":"14:03:00","vm":89,"va":29,"ov":0,"use":13875,"idle":5932,"off":72495,"st":8,"span":20823,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.54","d":1,"w":"T3","km":62.17,"a":"00:18:56","b":"17:26:58","vm":71,"va":26,"ov":0,"use":9427,"idle":3454,"off":76943,"st":9,"span":61682,"r0":"Cần Thơ","r1":"Vĩnh Long","p0":"Hưng Phú, Cần Thơ","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":2,"w":"T4","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":3,"w":"T5","km":93.35,"a":"03:14:37","b":"19:02:31","vm":74,"va":26,"ov":0,"use":18062,"idle":9332,"off":68308,"st":11,"span":56874,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":4,"w":"T6","km":147.87,"a":"03:45:46","b":"22:34:48","vm":81,"va":27,"ov":0,"use":18232,"idle":4830,"off":68138,"st":18,"span":67742,"r0":"Vĩnh Long","r1":"Cần Thơ","p0":"Song Phú, Vĩnh Long","p1":"Hưng Phú, Cần Thơ"},{"x":"65H-029.54","d":5,"w":"T7","km":129.09,"a":"05:24:39","b":"17:08:55","vm":79,"va":27,"ov":0,"use":13899,"idle":2139,"off":72471,"st":16,"span":42256,"r0":"Cần Thơ","r1":"Vĩnh Long","p0":"Hưng Phú, Cần Thơ","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":6,"w":"CN","km":0.01,"a":"17:37:36","b":"22:09:29","vm":4,"va":3,"ov":0,"use":110,"idle":110,"off":86260,"st":2,"span":16313,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":7,"w":"T2","km":70.33,"a":"05:06:38","b":"12:12:01","vm":69,"va":26,"ov":0,"use":8953,"idle":2387,"off":77417,"st":10,"span":25523,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":8,"w":"T3","km":140.06,"a":"02:56:52","b":"16:55:23","vm":77,"va":27,"ov":0,"use":14627,"idle":1857,"off":71743,"st":16,"span":50311,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":9,"w":"T4","km":69.04,"a":"03:07:54","b":"18:25:44","vm":77,"va":25,"ov":0,"use":7327,"idle":2095,"off":77912,"st":10,"span":55070,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":10,"w":"T5","km":160.36,"a":"03:01:06","b":"19:28:16","vm":80,"va":30,"ov":0,"use":19129,"idle":5303,"off":67241,"st":18,"span":59230,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":11,"w":"T6","km":222.72,"a":"03:06:37","b":"18:15:58","vm":87,"va":29,"ov":0,"use":24016,"idle":5506,"off":61365,"st":21,"span":54561,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":12,"w":"T7","km":0.01,"a":"06:23:32","b":"18:09:22","vm":3,"va":3,"ov":0,"use":2592,"idle":2592,"off":83778,"st":2,"span":42350,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":13,"w":"CN","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":14,"w":"T2","km":75.87,"a":"14:39:44","b":"19:31:33","vm":75,"va":26,"ov":0,"use":9910,"idle":2645,"off":76460,"st":9,"span":17509,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":15,"w":"T3","km":152.65,"a":"02:56:50","b":"19:42:01","vm":83,"va":30,"ov":0,"use":15226,"idle":2254,"off":71144,"st":13,"span":60311,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":16,"w":"T4","km":66.81,"a":"03:16:08","b":"11:02:31","vm":70,"va":26,"ov":0,"use":7791,"idle":1772,"off":76878,"st":8,"span":27983,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":17,"w":"T5","km":0.03,"a":"13:17:36","b":"17:38:20","vm":6,"va":4,"ov":0,"use":13802,"idle":13797,"off":71488,"st":3,"span":15644,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":18,"w":"T6","km":158.77,"a":"04:21:48","b":"17:32:23","vm":84,"va":29,"ov":0,"use":16523,"idle":3176,"off":66174,"st":15,"span":47435,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":19,"w":"T7","km":163.48,"a":"03:03:47","b":"19:03:22","vm":78,"va":27,"ov":0,"use":21056,"idle":6737,"off":64403,"st":17,"span":57575,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":20,"w":"CN","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":21,"w":"T2","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":85410,"st":1,"span":0,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":22,"w":"T3","km":0.02,"a":"10:52:06","b":"14:44:36","vm":6,"va":4,"ov":0,"use":309,"idle":306,"off":86061,"st":3,"span":13950,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":23,"w":"T4","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":24,"w":"T5","km":78.32,"a":"11:39:59","b":"20:27:51","vm":78,"va":26,"ov":0,"use":10557,"idle":2929,"off":75813,"st":13,"span":31672,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":25,"w":"T6","km":239.92,"a":"02:59:18","b":"18:40:28","vm":78,"va":28,"ov":0,"use":26819,"idle":5660,"off":59551,"st":20,"span":56470,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":26,"w":"T7","km":68.52,"a":"03:06:39","b":"18:28:56","vm":77,"va":27,"ov":0,"use":11143,"idle":4640,"off":75227,"st":8,"span":55337,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":27,"w":"CN","km":0.03,"a":"09:51:16","b":"10:47:30","vm":4,"va":3,"ov":0,"use":125,"idle":111,"off":86245,"st":3,"span":3374,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":28,"w":"T2","km":88.5,"a":"11:55:45","b":"17:57:11","vm":75,"va":25,"ov":0,"use":12360,"idle":3150,"off":74010,"st":10,"span":21686,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":29,"w":"T3","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"65H-029.54","d":30,"w":"T4","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"Vĩnh Long","r1":"Vĩnh Long","p0":"Song Phú, Vĩnh Long","p1":"Song Phú, Vĩnh Long"},{"x":"50E-404.01","d":1,"w":"T3","km":0.0,"a":"10:10:20","b":"17:47:01","vm":0,"va":0,"ov":0,"use":4,"idle":4,"off":86366,"st":1,"span":27401,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":2,"w":"T4","km":2.9,"a":"14:09:55","b":"17:46:59","vm":33,"va":11,"ov":0,"use":1886,"idle":1333,"off":84484,"st":2,"span":13024,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":3,"w":"T5","km":188.26,"a":"07:05:09","b":"23:59:30","vm":79,"va":32,"ov":0,"use":58617,"idle":43029,"off":27753,"st":6,"span":60861,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":4,"w":"T6","km":369.39,"a":"00:00:00","b":"18:44:49","vm":100,"va":40,"ov":0,"use":66154,"idle":41417,"off":19121,"st":10,"span":67489,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":5,"w":"T7","km":512.62,"a":"08:46:53","b":"23:59:37","vm":84,"va":40,"ov":0,"use":54622,"idle":16970,"off":31755,"st":7,"span":54764,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":6,"w":"CN","km":393.58,"a":"00:00:00","b":"20:54:02","vm":97,"va":43,"ov":0,"use":42741,"idle":17409,"off":43629,"st":15,"span":75242,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":7,"w":"T2","km":5.55,"a":"08:42:56","b":"18:03:25","vm":32,"va":10,"ov":0,"use":4157,"idle":3070,"off":80473,"st":4,"span":33629,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":8,"w":"T3","km":188.36,"a":"07:42:00","b":"18:27:23","vm":69,"va":24,"ov":0,"use":38586,"idle":19077,"off":47784,"st":7,"span":38723,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":9,"w":"T4","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":10,"w":"T5","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":11,"w":"T6","km":194.51,"a":"07:02:54","b":"18:53:29","vm":69,"va":24,"ov":0,"use":40129,"idle":20835,"off":43931,"st":6,"span":42635,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":12,"w":"T7","km":73.95,"a":"07:33:52","b":"16:19:26","vm":86,"va":25,"ov":0,"use":20596,"idle":13622,"off":65774,"st":6,"span":31534,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":13,"w":"CN","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":14,"w":"T2","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":15,"w":"T3","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":16,"w":"T4","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":17,"w":"T5","km":208.78,"a":"06:57:35","b":"23:59:30","vm":101,"va":37,"ov":0,"use":36838,"idle":22173,"off":48422,"st":8,"span":61315,"r0":"TP.HCM","r1":"Lâm Đồng","p0":"Nhà Bè, TP.HCM","p1":"Hàm Kiệm, Lâm Đồng"},{"x":"50E-404.01","d":18,"w":"T6","km":161.88,"a":"00:00:00","b":"21:35:50","vm":86,"va":42,"ov":0,"use":73072,"idle":62400,"off":13298,"st":7,"span":77750,"r0":"Lâm Đồng","r1":"TP.HCM","p0":"Hàm Kiệm, Lâm Đồng","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":19,"w":"T7","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":84720,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":20,"w":"CN","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":21,"w":"T2","km":324.48,"a":"09:34:49","b":"23:59:30","vm":99,"va":41,"ov":0,"use":51724,"idle":31100,"off":34646,"st":8,"span":51881,"r0":"TP.HCM","r1":"Đồng Nai","p0":"Nhà Bè, TP.HCM","p1":"Bình An, Đồng Nai"},{"x":"50E-404.01","d":22,"w":"T3","km":49.45,"a":"00:00:00","b":"11:34:36","vm":90,"va":35,"ov":0,"use":5298,"idle":1362,"off":81072,"st":2,"span":41676,"r0":"Đồng Nai","r1":"TP.HCM","p0":"Long Thành, Đồng Nai","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":23,"w":"T4","km":0.0,"a":"19:32:03","b":"19:32:08","vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":5,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":24,"w":"T5","km":0.0,"a":"10:08:30","b":"10:08:31","vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":1,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":25,"w":"T6","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":26,"w":"T7","km":324.17,"a":"06:59:34","b":"23:59:30","vm":91,"va":38,"ov":0,"use":59383,"idle":37008,"off":26987,"st":10,"span":61196,"r0":"TP.HCM","r1":"Đồng Nai","p0":"Nhà Bè, TP.HCM","p1":"Xuân Quế, Đồng Nai"},{"x":"50E-404.01","d":27,"w":"CN","km":55.62,"a":"00:00:00","b":"19:14:33","vm":78,"va":37,"ov":0,"use":9660,"idle":5388,"off":76710,"st":1,"span":69273,"r0":"Đồng Nai","r1":"TP.HCM","p0":"Xuân Quế, Đồng Nai","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":28,"w":"T2","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":29,"w":"T3","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"50E-404.01","d":30,"w":"T4","km":368.91,"a":"10:37:10","b":"23:31:58","vm":94,"va":43,"ov":2,"use":38319,"idle":15301,"off":48051,"st":12,"span":46488,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":1,"w":"T3","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":2,"w":"T4","km":315.32,"a":"10:56:24","b":"23:59:30","vm":94,"va":32,"ov":1,"use":45334,"idle":18738,"off":41036,"st":14,"span":46986,"r0":"TP.HCM","r1":"Lâm Đồng","p0":"Nhà Bè, TP.HCM","p1":"Đức Lập, Lâm Đồng"},{"x":"65H-029.86","d":3,"w":"T5","km":430.57,"a":"00:00:00","b":"22:16:05","vm":96,"va":35,"ov":0,"use":70348,"idle":34538,"off":16022,"st":11,"span":80165,"r0":"Lâm Đồng","r1":"TP.HCM","p0":"Đắk Mil, Lâm Đồng","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":4,"w":"T6","km":0.0,"a":"06:42:29","b":"06:42:53","vm":0,"va":0,"ov":0,"use":1,"idle":1,"off":86369,"st":1,"span":24,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":5,"w":"T7","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":6,"w":"CN","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":7,"w":"T2","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":8,"w":"T3","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":9,"w":"T4","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":10,"w":"T5","km":169.1,"a":"09:00:27","b":"19:41:44","vm":74,"va":25,"ov":0,"use":38285,"idle":20638,"off":48085,"st":10,"span":38477,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":11,"w":"T6","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":12,"w":"T7","km":0.0,"a":"11:10:15","b":"11:10:16","vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":1,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":13,"w":"CN","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":14,"w":"T2","km":2.74,"a":"12:03:42","b":"16:59:39","vm":32,"va":13,"ov":0,"use":1040,"idle":535,"off":85330,"st":2,"span":17757,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":15,"w":"T3","km":74.21,"a":"07:07:20","b":"13:21:09","vm":74,"va":25,"ov":0,"use":22053,"idle":14875,"off":64317,"st":6,"span":22429,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":16,"w":"T4","km":0.0,"a":"23:04:37","b":"23:04:38","vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":1,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":17,"w":"T5","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":18,"w":"T6","km":78.59,"a":"05:32:54","b":"17:11:46","vm":80,"va":22,"ov":0,"use":35823,"idle":27733,"off":50547,"st":6,"span":41932,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":19,"w":"T7","km":0.0,"a":"04:55:22","b":"04:55:23","vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":1,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":20,"w":"CN","km":0.0,"a":"22:30:50","b":"22:30:55","vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":5,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":21,"w":"T2","km":1.92,"a":"10:11:10","b":"14:42:59","vm":35,"va":9,"ov":0,"use":13878,"idle":13412,"off":72492,"st":2,"span":16309,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":22,"w":"T3","km":274.59,"a":"11:07:29","b":"23:59:30","vm":81,"va":36,"ov":0,"use":44184,"idle":21827,"off":42186,"st":8,"span":46321,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":23,"w":"T4","km":0.1,"a":"00:00:00","b":"16:59:12","vm":10,"va":8,"ov":0,"use":53640,"idle":53614,"off":32730,"st":1,"span":61152,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":24,"w":"T5","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":25,"w":"T6","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":26,"w":"T7","km":0.0,"a":"07:01:49","b":"15:56:36","vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":32087,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":27,"w":"CN","km":0.0,"a":"15:47:05","b":"15:47:06","vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":1,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":28,"w":"T2","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":29,"w":"T3","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.86","d":30,"w":"T4","km":145.38,"a":"01:38:48","b":"15:30:32","vm":86,"va":26,"ov":0,"use":31968,"idle":18312,"off":54402,"st":7,"span":49904,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":1,"w":"T3","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":2,"w":"T4","km":0.0,"a":"10:54:31","b":"13:54:08","vm":0,"va":0,"ov":0,"use":3227,"idle":3227,"off":83143,"st":1,"span":10777,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":3,"w":"T5","km":0.0,"a":"22:12:03","b":"22:12:04","vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":1,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":4,"w":"T6","km":0.0,"a":"06:58:12","b":"07:54:24","vm":0,"va":0,"ov":0,"use":275,"idle":275,"off":86095,"st":1,"span":3372,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":5,"w":"T7","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":6,"w":"CN","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":7,"w":"T2","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":8,"w":"T3","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":9,"w":"T4","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":10,"w":"T5","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":11,"w":"T6","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":12,"w":"T7","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":13,"w":"CN","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":14,"w":"T2","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":15,"w":"T3","km":254.8,"a":"12:19:01","b":"23:59:30","vm":87,"va":29,"ov":0,"use":41055,"idle":16064,"off":45315,"st":6,"span":42029,"r0":"TP.HCM","r1":"Lâm Đồng","p0":"Nhà Bè, TP.HCM","p1":"Thuận Hạnh, Lâm Đồng"},{"x":"65H-029.94","d":16,"w":"T4","km":485.1,"a":"00:00:00","b":"22:25:15","vm":95,"va":35,"ov":0,"use":68323,"idle":28170,"off":18047,"st":8,"span":80715,"r0":"Lâm Đồng","r1":"TP.HCM","p0":"Thuận Hạnh, Lâm Đồng","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":17,"w":"T5","km":0.2,"a":"08:26:28","b":"08:31:13","vm":11,"va":6,"ov":0,"use":270,"idle":168,"off":86100,"st":2,"span":285,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":18,"w":"T6","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":19,"w":"T7","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":20,"w":"CN","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":21,"w":"T2","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":22,"w":"T3","km":196.3,"a":"10:10:46","b":"23:59:43","vm":68,"va":25,"ov":0,"use":46128,"idle":27043,"off":40255,"st":11,"span":49737,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Cát Lái, TP.HCM"},{"x":"65H-029.94","d":23,"w":"T4","km":12.52,"a":"00:00:00","b":"11:05:14","vm":52,"va":21,"ov":0,"use":1953,"idle":534,"off":84417,"st":2,"span":39914,"r0":"TP.HCM","r1":"TP.HCM","p0":"Cát Lái, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":24,"w":"T5","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":25,"w":"T6","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":26,"w":"T7","km":140.36,"a":"07:09:13","b":"14:19:51","vm":91,"va":34,"ov":0,"use":20838,"idle":10880,"off":65532,"st":5,"span":25838,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":27,"w":"CN","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":85410,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":28,"w":"T2","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":29,"w":"T3","km":0.0,"a":NaN,"b":NaN,"vm":0,"va":0,"ov":0,"use":0,"idle":0,"off":86370,"st":1,"span":0,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"},{"x":"65H-029.94","d":30,"w":"T4","km":0.0,"a":"06:21:59","b":"16:41:13","vm":0,"va":0,"ov":0,"use":930,"idle":930,"off":85440,"st":1,"span":37154,"r0":"TP.HCM","r1":"TP.HCM","p0":"Nhà Bè, TP.HCM","p1":"Nhà Bè, TP.HCM"}];
+
+/* ---------- cơ sở ---------- */
+const XE=[]; DATA.forEach(r=>{ if(!XE.includes(r.x)) XE.push(r.x); });
+const PAL=['#2F6FED','#E8830C','#12A072','#9B5CF6','#D6336C'];
+const col=x=>{ const i=XE.indexOf(x); if(i>=0) return PAL[i%PAL.length]; const a=assetOf(x); return a&&a.t==='tau'?'#0E7490':'#6B7C8B'; };
+const TC={move:'#1C7C9C',idle:'#E0A100',off:'#8A9BAD'};
+const TYPES=['Ăn trưa','Tiếp nhiên liệu','Nghỉ khác'];
+const TCOL={'Ăn trưa':'#12A072','Tiếp nhiên liệu':'#E8830C','Nghỉ khác':'#8A9BAD'};
+const WD={}; DATA.forEach(r=>{WD[r.d]=r.w;});
+DATA.forEach(r=>{ r.move=Math.max(r.use-r.idle,0); r.offs=Math.max(r.span-r.use,0); });
+const MAXD=DATA.reduce((m,r)=>Math.max(m,r.d),1);
+const CATS=[['kho','Phí vào kho'],['vetc','Phí VETC'],['cau','Phí cầu đường'],['nl','Nhiên liệu'],['bd','Bảo dưỡng, sửa chữa, tiêu hao'],['khac','Chi phí khác']];
+const CAT_COL={kho:'#6C8EAD',vetc:'#9B5CF6',cau:'#B08968',nl:'#E8830C',bd:'#12A072',khac:'#8A9BAD'};
+CAT_COL.tx='#E64980';
+const CATS_ALL=CATS.concat([['tx','Thu nhập tài xế (tạm tính)']]);
+const BASE_PAY={base:5500000,minKm:5,lim:[100,200,300],amt:[500000,750000,1000000,1500000]};
+const clone=o=>JSON.parse(JSON.stringify(o));
+/* Phương tiện chưa có dữ liệu GPS (lấy từ bảng chi phí tháng 9) */
+const BASE_NONGPS=[{x:'65H-024.70',t:'xe'},{x:'50E-378.87',t:'xe'},{x:'50E-376.50',t:'xe'},{x:'50E-374.12',t:'xe'},{x:'SG-104.02',t:'tau',n:'Sà lan'}];
+/* Chi phí tháng 9/2026 theo tài xế và phương tiện (file chiphixe-thang9-2026.xlsx) */
+const BASE_COST=[
+ {x:'65H-029.54',dr:'Hữu Nhi',v:{nl:12380000,khac:1200000}},
+ {x:'65H-024.70',dr:'Giang',v:{}},
+ {x:'65H-029.94',dr:'Hiếu',v:{bd:3500000}},
+ {x:'50E-404.01',dr:'Thành',v:{kho:4000000,nl:32000000,bd:1800000,khac:120000}},
+ {x:'65H-029.86',dr:'Thông',v:{nl:10300000}},
+ {x:'50E-378.87',dr:'Xuân Hiếu',v:{bd:1594000}},
+ {x:'50E-376.50',dr:'Nam',v:{bd:774000}},
+ {x:'50E-374.12',dr:'Hoa',v:{bd:1224000}},
+ {x:'65H-029.94',dr:'Sơn',v:{kho:1100000,nl:11020000,bd:150000,khac:400000}},
+ {x:'50E-652.24',dr:'Bảo',v:{kho:4180000,nl:24830000}},
+ {x:'SG-104.02',dr:'',v:{khac:171623000}},
+ {x:'SG-104.02',dr:'',v:{khac:16500000}}
+];
+/* Số tổng chưa có chi tiết từng xe: phí VETC, chia theo km vận hành */
+/* Doanh thu tháng 9/2026 từ bảng kê cước vận tải SWE (sheet T 09 và SFT Vĩnh Long). n là số chuyến tính cho dòng: dòng T 09 mỗi dòng 1 chuyến; xe 65H-029.54 mỗi chuyến là 1 bồn 6.000 lít, gắn vào dòng đầu tiên của mỗi ngày */
+const BASE_REV=[{"d":3,"x":"65H-029.86","route":"Nhà Bè → SFT (KH CN Huy Phong Phát)","amt":17000000,"vol":20000,"dr":"Sơn","km1":0,"cust":"SFT","n":1},{"d":3,"x":"50E-404.01","route":"Nhà Bè → SFT (CH Số 38)","amt":5175000,"vol":23000,"dr":"Thành","km1":0,"cust":"SFT","n":1},{"d":3,"x":"50E-652.24","route":"Nhà Bè → SFT (CH Số 06)","amt":3400000,"vol":20000,"dr":"Bảo","km1":0,"cust":"SFT","n":1},{"d":3,"x":"50E-652.24","route":"Nhà Bè → CH Bàu Bàng","amt":4600000,"vol":20000,"dr":"Bảo","km1":0,"cust":"SWI","n":1},{"d":4,"x":"50E-404.01","route":"Pvoil Nhà Bè → CH 86, CH 87, CH 89","amt":6900000,"vol":23000,"dr":"Thành","km1":0,"cust":"Đống Đa","n":1},{"d":5,"x":"50E-404.01","route":"Nhà Bè → SFT (KH CN Trường Sơn 98)","amt":13340000,"vol":23000,"dr":"Thành","km1":0,"cust":"SFT","n":1},{"d":6,"x":"50E-404.01","route":"Pvoil Nhà Bè → CH 86, CH 87, CH 89","amt":6900000,"vol":23000,"dr":"Thành","km1":0,"cust":"Đống Đa","n":1},{"d":8,"x":"50E-404.01","route":"Nhà Bè → CH Bàu Bàng","amt":4600000,"vol":16000,"dr":"Thành","km1":0,"cust":"SWI","n":1},{"d":8,"x":"50E-652.24","route":"Nhà Bè → SFT (CH Số 6, CH Số 9)","amt":3400000,"vol":20000,"dr":"Bảo","km1":0,"cust":"SFT","n":1},{"d":10,"x":"50E-652.24","route":"Nhà Bè → SFT (KH CN Trường Sơn 98)","amt":5600000,"vol":20000,"dr":"Bảo","km1":0,"cust":"SFT","n":1},{"d":10,"x":"65H-029.86","route":"Pvoil Nhà Bè → CH 66, CH 67","amt":3600000,"vol":20000,"dr":"Thành","km1":0,"cust":"Đống Đa","n":1},{"d":11,"x":"50E-404.01","route":"Nhà Bè → CH Bàu Bàng","amt":4600000,"vol":20000,"dr":"Thành","km1":0,"cust":"SWI","n":1},{"d":12,"x":"50E-404.01","route":"Nhà Bè → SFT (CH Số 06, CH Số 09)","amt":3910000,"vol":23000,"dr":"Thành","km1":0,"cust":"SFT","n":1},{"d":15,"x":"50E-652.24","route":"Nhà Bè → SFT (CH Số 38)","amt":4500000,"vol":20000,"dr":"Bảo","km1":0,"cust":"SFT","n":1},{"d":15,"x":"65H-029.86","route":"Nhà Bè → SFT (CH Số 6, CH Số 9)","amt":3400000,"vol":20000,"dr":"Thành","km1":0,"cust":"SFT","n":1},{"d":16,"x":"65H-029.94","route":"Nhà Bè → KH CN Huy Phong Phát","amt":18000000,"vol":20000,"dr":"Sơn","km1":0,"cust":"Huy Phong Phát","n":1},{"d":17,"x":"50E-404.01","route":"Pvoil Nhà Bè → CH 86, CH 87, CH 89","amt":6900000,"vol":23000,"dr":"Thành","km1":0,"cust":"Đống Đa","n":1},{"d":17,"x":"50E-652.24","route":"Pvoil Nhà Bè → CH 66, CH 67","amt":3600000,"vol":20000,"dr":"Bảo","km1":0,"cust":"Đống Đa","n":1},{"d":18,"x":"65H-029.86","route":"Nhà Bè → SFT (CH Số 06, CH Số 09)","amt":4000000,"vol":20000,"dr":"Thành","km1":0,"cust":"SFT","n":1},{"d":18,"x":"50E-652.24","route":"Nhà Bè → SFT (CH Số 38)","amt":5200000,"vol":20000,"dr":"Bảo","km1":0,"cust":"SFT","n":1},{"d":18,"x":"50E-652.24","route":"Pvoil Nhà Bè → CH 60, CH 77","amt":6600000,"vol":20000,"dr":"Bảo","km1":0,"cust":"Đống Đa","n":1},{"d":21,"x":"50E-404.01","route":"Pvoil Nhà Bè → CH 86, CH 87, CH 89","amt":7935000,"vol":23000,"dr":"Thành","km1":0,"cust":"Đống Đa","n":1},{"d":22,"x":"50E-652.24","route":"Nhà Bè → SFT (CH Số 06)","amt":4000000,"vol":20000,"dr":"Bảo","km1":0,"cust":"SFT","n":1},{"d":22,"x":"65H-029.94","route":"Nhà Bè → CH Bàu Bàng, KHCN Bách Khoa","amt":4600000,"vol":20000,"dr":"Sơn","km1":0,"cust":"SWI","n":1},{"d":22,"x":"65H-029.86","route":"Pvoil Nhà Bè → CH 60, CH 77","amt":6600000,"vol":20000,"dr":"Thành","km1":0,"cust":"Đống Đa","n":1},{"d":23,"x":"50E-652.24","route":"Pvoil Nhà Bè → CH 66, CH 67","amt":4200000,"vol":20000,"dr":"Bảo","km1":0,"cust":"Đống Đa","n":1},{"d":24,"x":"50E-652.24","route":"Nhà Bè → CH Bàu Bàng","amt":5300000,"vol":20000,"dr":"Bảo","km1":0,"cust":"SWI","n":1},{"d":26,"x":"65H-029.94","route":"Nhà Bè → CH 60","amt":4200000,"vol":20000,"dr":"Sơn","km1":0,"cust":"Đống Đa","n":1},{"d":26,"x":"50E-404.01","route":"Pvoil Nhà Bè → CH 86, CH 87, CH 89","amt":7935000,"vol":23000,"dr":"Thành","km1":0,"cust":"Đống Đa","n":1},{"d":26,"x":"50E-652.24","route":"Pvoil Nhà Bè → CH 18, CH 39","amt":3700000,"vol":20000,"dr":"Bảo","km1":0,"cust":"Đống Đa","n":1},{"d":26,"x":"50E-652.24","route":"Nhà Bè → SFT (CH Số 06, CH Số 09)","amt":4000000,"vol":20000,"dr":"Bảo","km1":0,"cust":"SFT","n":1},{"d":28,"x":"50E-652.24","route":"Nhà Bè → CH 66, CH 67","amt":4200000,"vol":20000,"dr":"Bảo","km1":0,"cust":"Đống Đa","n":1},{"d":29,"x":"50E-652.24","route":"Nhà Bè → CH 60, CH 77","amt":6600000,"vol":20000,"dr":"Bảo","km1":0,"cust":"Đống Đa","n":1},{"d":30,"x":"65H-029.86","route":"Nhà Bè → KH CN Mỏ Đá Hiền Khánh","amt":4000000,"vol":10000,"dr":"Sơn","km1":0,"cust":"SFT","n":1},{"d":30,"x":"50E-652.24","route":"Nhà Bè → CH 18, CH 39","amt":3700000,"vol":20000,"dr":"Bảo","km1":0,"cust":"Đống Đa","n":1},{"d":30,"x":"50E-404.01","route":"Nhà Bè → CH 86, CH 87, CH 89","amt":7935000,"vol":23000,"dr":"Nam","km1":0,"cust":"Đống Đa","n":1},{"d":3,"x":"65H-029.54","route":"Kho Mê Kông → SFT 25","amt":680000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":1},{"d":3,"x":"65H-029.54","route":"Kho Mê Kông → SFT 23","amt":340000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":4,"x":"65H-029.54","route":"Kho Mê Kông → SFT 17","amt":1020000,"vol":6000,"dr":"","km1":0,"cust":"SFT","n":2},{"d":4,"x":"65H-029.54","route":"Kho Mê Kông → SFT 16","amt":680000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":4,"x":"65H-029.54","route":"Kho Mê Kông → SFT 22","amt":340000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":5,"x":"65H-029.54","route":"Mê Kông → SFT 15","amt":680000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":2},{"d":5,"x":"65H-029.54","route":"Mê Kông → SFT 23","amt":340000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":5,"x":"65H-029.54","route":"Mê Kông → SFT 12","amt":680000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":5,"x":"65H-029.54","route":"Mê Kông → SFT 22","amt":340000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":8,"x":"65H-029.54","route":"Mê Kông → SFT 17","amt":1020000,"vol":6000,"dr":"","km1":0,"cust":"SFT","n":2},{"d":8,"x":"65H-029.54","route":"Mê Kông → SFT 19","amt":680000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":8,"x":"65H-029.54","route":"Mê Kông → SFT 26","amt":340000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":10,"x":"65H-029.54","route":"Mê Kông → SFT 15","amt":850000,"vol":5000,"dr":"","km1":0,"cust":"SFT","n":2},{"d":10,"x":"65H-029.54","route":"Mê Kông → SFT 26","amt":170000,"vol":1000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":10,"x":"65H-029.54","route":"Mê Kông → SFT 22","amt":340000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":10,"x":"65H-029.54","route":"Mê Kông → SFT 25","amt":680000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":11,"x":"65H-029.54","route":"Mê Kông → SFT 16","amt":680000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":3},{"d":11,"x":"65H-029.54","route":"Mê Kông → SFT 23","amt":340000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":11,"x":"65H-029.54","route":"Mê Kông → SFT 12","amt":680000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":11,"x":"65H-029.54","route":"Mê Kông → SFT 26","amt":340000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":11,"x":"65H-029.54","route":"Mê Kông → SFT 17","amt":680000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":11,"x":"65H-029.54","route":"Mê Kông → SFT 15","amt":340000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":14,"x":"65H-029.54","route":"Mê Kông → SFT 15","amt":680000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":1},{"d":14,"x":"65H-029.54","route":"Mê Kông → SFT 22","amt":340000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":15,"x":"65H-029.54","route":"Mê Kông → SFT 12","amt":680000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":1},{"d":15,"x":"65H-029.54","route":"Mê Kông → SFT 26","amt":340000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":16,"x":"65H-029.54","route":"Mê Kông → SFT 17","amt":1020000,"vol":6000,"dr":"","km1":0,"cust":"SFT","n":1},{"d":18,"x":"65H-029.54","route":"Mê Kông → SFT 16","amt":800000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":2},{"d":18,"x":"65H-029.54","route":"Mê Kông → SFT 22","amt":400000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":18,"x":"65H-029.54","route":"Mê Kông → SFT 19","amt":600000,"vol":3000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":18,"x":"65H-029.54","route":"Mê Kông → SFT 12","amt":600000,"vol":3000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":19,"x":"65H-029.54","route":"Mê Kông → SFT 15","amt":800000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":2},{"d":19,"x":"65H-029.54","route":"Mê Kông → SFT 23","amt":400000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":19,"x":"65H-029.54","route":"Mê Kông → SFT 25","amt":800000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":19,"x":"65H-029.54","route":"Mê Kông → SFT 26","amt":400000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":24,"x":"65H-029.54","route":"Mê Kông → SFT 17","amt":800000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":1},{"d":24,"x":"65H-029.54","route":"Mê Kông → SFT 19","amt":400000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":25,"x":"65H-029.54","route":"Mê Kông → SFT 15","amt":800000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":3},{"d":25,"x":"65H-029.54","route":"Mê Kông → SFT 23","amt":400000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":25,"x":"65H-029.54","route":"Mê Kông → SFT 12","amt":800000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":25,"x":"65H-029.54","route":"Mê Kông → SFT 26","amt":400000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":25,"x":"65H-029.54","route":"Mê Kông → SFT 25","amt":600000,"vol":3000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":25,"x":"65H-029.54","route":"Mê Kông → SFT 16","amt":600000,"vol":3000,"dr":"","km1":0,"cust":"SFT","n":0},{"d":26,"x":"65H-029.54","route":"Mê Kông → SFT 17","amt":1200000,"vol":6000,"dr":"","km1":0,"cust":"SFT","n":1},{"d":28,"x":"65H-029.54","route":"Mê Kông → SFT 19","amt":800000,"vol":4000,"dr":"","km1":0,"cust":"SFT","n":1},{"d":28,"x":"65H-029.54","route":"Mê Kông → SFT 22","amt":400000,"vol":2000,"dr":"","km1":0,"cust":"SFT","n":0}];
+/* Doanh thu sà lan SG-104.02 tháng 9/2026 từ biên bản đối chiếu cước (sheet BBCVT SE Sà lan). amt là số trước thuế GTGT 8% (gross/1,08); gross là số gồm thuế. Mỗi ngày vận chuyển là 1 chuyến (n gắn vào dòng đầu của ngày) */
+const BASE_TAU=[{"d":5,"x":"SG-104.02","route":"PVOIL Nhà Bè → SE Cần Thơ","vol":167404,"hrs":0,"amt":27900667,"gross":30132720,"lit":0,"dr":"","cust":"Southern Energy","n":1,"inv":"00001447"},{"d":5,"x":"SG-104.02","route":"PVOIL Nhà Bè → SE Cần Thơ","vol":166477,"hrs":0,"amt":30829074,"gross":33295400,"lit":0,"dr":"","cust":"Southern Energy","n":0,"inv":"00001447"},{"d":7,"x":"SG-104.02","route":"SP Cần Thơ → SE Cần Thơ","vol":340000,"hrs":0,"amt":9259259,"gross":10000000,"lit":0,"dr":"","cust":"Southern Energy","n":1,"inv":"00001452"},{"d":9,"x":"SG-104.02","route":"PLX Cần Thơ → SE Cần Thơ","vol":300000,"hrs":0,"amt":9259259,"gross":10000000,"lit":0,"dr":"","cust":"Southern Energy","n":1,"inv":"00001457"},{"d":12,"x":"SG-104.02","route":"PLX Nhà Bè → SE Cần Thơ","vol":339824,"hrs":0,"amt":56637333,"gross":61168320,"lit":0,"dr":"","cust":"Southern Energy","n":1,"inv":"00001464"},{"d":17,"x":"SG-104.02","route":"PLX Nhà Bè → SE Cần Thơ","vol":338993,"hrs":0,"amt":56498833,"gross":61018740,"lit":0,"dr":"","cust":"Southern Energy","n":1,"inv":"00001471"},{"d":25,"x":"SG-104.02","route":"PLX Nhà Bè → SE Cần Thơ","vol":177079,"hrs":0,"amt":29513167,"gross":31874220,"lit":0,"dr":"","cust":"Southern Energy","n":1,"inv":"00001485"},{"d":25,"x":"SG-104.02","route":"PLX Nhà Bè → SE Cần Thơ","vol":156867,"hrs":0,"amt":29049444,"gross":31373400,"lit":0,"dr":"","cust":"Southern Energy","n":0,"inv":"00001485"},{"d":30,"x":"SG-104.02","route":"SP Cần Thơ → SE Cần Thơ","vol":260000,"hrs":0,"amt":9259259,"gross":10000000,"lit":0,"dr":"","cust":"Southern Energy","n":1,"inv":"00001496"}];
+const BASE_POOL={vetc:22058696};
+/* Phân công tài xế: from/to là ngày trong tháng; null là chưa rõ thời điểm */
+const BASE_ASSIGN=[
+ {x:'65H-029.54',dr:'Hữu Nhi',from:1,to:30},{x:'65H-024.70',dr:'Giang',from:1,to:30},
+ {x:'50E-404.01',dr:'Thành',from:1,to:30},{x:'65H-029.86',dr:'Thông',from:1,to:30},
+ {x:'50E-378.87',dr:'Xuân Hiếu',from:1,to:30},{x:'50E-376.50',dr:'Nam',from:1,to:30},
+ {x:'50E-374.12',dr:'Hoa',from:1,to:30},{x:'50E-652.24',dr:'Bảo',from:1,to:30},
+ {x:'65H-029.94',dr:'Hiếu',from:null,to:null},{x:'65H-029.94',dr:'Sơn',from:null,to:null}
+];
+
+const nf=(n,d=0)=>(n==null||!isFinite(n))?'—':new Intl.NumberFormat('vi-VN',{minimumFractionDigits:d,maximumFractionDigits:d}).format(n);
+const pct=(a,b,d=0)=>b>0?nf(a/b*100,d)+'%':'—';
+const hrs=s=>s/3600;
+const hm=s=>{const m=Math.round(s/60);return Math.floor(m/60)+':'+String(m%60).padStart(2,'0');};
+const money=n=>{ if(n==null||!isFinite(n)) return '—'; const a=Math.abs(n); if(a>=1e9) return nf(n/1e9,2)+' tỷ'; if(a>=1e6) return nf(n/1e6,1)+' tr'; return nf(n); };
+const vnd=n=>n==null||!isFinite(n)?'—':nf(n);
+const sum=(a,f)=>a.reduce((s,x)=>s+(typeof f==='function'?f(x):(x[f]||0)),0);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const tn=r=>r.n==null?1:r.n;
+
+/* ---------- lưu trữ ---------- */
+function save(k,v){ try{ localStorage.setItem('sft26_'+k,JSON.stringify(v)); }catch(e){} }
+function load(k,def){ try{ const s=localStorage.getItem('sft26_'+k); return s?JSON.parse(s):def; }catch(e){ return def; } }
+
+const st={
+  sel:new Set(XE), from:1, to:MAXD, thr:5,
+  tab:'tong', timeMode:'avg', demo:false,
+  fuel:load('fuel',[]), rev:load('rev',clone(BASE_REV)), evt:load('evt',[]), price:load('price',0),
+  cost:load('cost',clone(BASE_COST)), pool:load('pool',clone(BASE_POOL)), assign:load('assign',clone(BASE_ASSIGN)), extra:load('extra',[]), tau:load('tau',clone(BASE_TAU)), pay:load('pay',clone(BASE_PAY)),
+  sort:{k:'km',dir:-1}, draft:{fuel:'',rev:'',evt:'',cost:'',assign:'',tau:''}, msg:{}, pick:null
+};
+let DEMO=null;
+
+/* ---------- đọc dữ liệu dán từ Excel ---------- */
+function splitLines(text){
+  return text.split(/\r?\n/).map(l=>l.replace(/\s+$/,'')).filter(l=>l.trim()).map(l=>{
+    const c=l.includes('\t')?l.split('\t'):(l.includes(';')?l.split(';'):l.split(/\s{2,}/));
+    return c.map(s=>s.trim());
+  });
+}
+function matchXe(s){
+  const n=String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(!n) return null;
+  return XE.find(x=>x.toUpperCase().replace(/[^A-Z0-9]/g,'')===n)||null;
+}
+function parseDay(s){
+  s=String(s||'').trim(); if(!s) return {e:'trống'};
+  let m;
+  if((m=s.match(/^(\d{1,2})$/))){ const d=+m[1]; return d>=1&&d<=31?{d}:{e:'ngày không hợp lệ'}; }
+  if((m=s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/))){ return +m[2]===9&&+m[1]===2026?{d:+m[3]}:{e:'ngoài tháng 9/2026'}; }
+  if((m=s.match(/^(\d{1,2})[-\/.](\d{1,2})(?:[-\/.](\d{2,4}))?/))){
+    let a=+m[1], b=+m[2], y=m[3]?+m[3]:2026; if(y<100) y+=2000;
+    if(y!==2026) return {e:'ngoài tháng 9/2026'};
+    if(b===9) return {d:a};
+    if(a===9) return {d:b};
+    return {e:'ngoài tháng 9/2026'};
+  }
+  return {e:'không nhận ra ngày'};
+}
+function parseNum(s){
+  if(s==null) return null; s=String(s).trim().replace(/[đĐ₫\s]|VND|vnd|lít|l$/g,''); if(!s||!/^[-\d.,]+$/.test(s)) return null;
+  const dots=(s.match(/\./g)||[]).length, commas=(s.match(/,/g)||[]).length;
+  let t=s;
+  if(dots&&commas){ const dec=s.lastIndexOf('.')>s.lastIndexOf(',')?'.':','; t=dec==='.'?s.replace(/,/g,''):s.replace(/\./g,'').replace(',','.'); }
+  else if(dots>1||commas>1){ t=s.replace(/[.,]/g,''); }
+  else if(dots===1||commas===1){ const sep=dots?'.':','; const tail=s.split(sep)[1]; t=(tail.length===3)?s.replace(sep,''):s.replace(sep,'.'); }
+  const v=parseFloat(t); return isFinite(v)?v:null;
+}
+function parseTime(s){
+  const m=String(s||'').match(/(\d{1,2})\s*[:hH]\s*(\d{2})/); return m?(+m[1]*60+ +m[2]):null;
+}
+function lead(cells){ // đổi chỗ nếu biển số đứng trước ngày
+  if(cells.length>1&&matchAsset(cells[0])&&!parseDay(cells[0]).d&&parseDay(cells[1]).d){ const c=cells.slice(); [c[0],c[1]]=[c[1],c[0]]; return c; }
+  return cells;
+}
+function isHeader(c){ return !parseDay(c[0]).d && !matchAsset(c[0]) && !matchAsset(c[1]) && !/^(tổng|tháng|total)/i.test(c[0]||''); }
+
+const PARSERS={
+  fuel(text){
+    const rows=[],errs=[];
+    splitLines(text).forEach((c0,i)=>{
+      let c=lead(c0); if(i===0&&isHeader(c)) return;
+      const xe=matchXe(c[1]); if(!xe){errs.push('Dòng '+(i+1)+': không khớp biển số "'+(c[1]||'')+'"');return;}
+      let d=0; if(c[0]&&!/^(tổng|tháng|total)/i.test(c[0])){ const p=parseDay(c[0]); if(p.e){errs.push('Dòng '+(i+1)+': '+p.e);return;} d=p.d; }
+      const l=parseNum(c[2]); if(!(l>0)){errs.push('Dòng '+(i+1)+': số lít không hợp lệ');return;}
+      const cost=parseNum(c[3])||0;
+      rows.push({d,x:xe,l,cost});
+    });
+    return {rows,errs};
+  },
+  rev(text){
+    const rows=[],errs=[];
+    splitLines(text).forEach((c0,i)=>{
+      let c=lead(c0); if(i===0&&isHeader(c)) return;
+      const xe=matchAsset(c[1]); if(!xe){errs.push('Dòng '+(i+1)+': không khớp biển số "'+(c[1]||'')+'"');return;}
+      if((assetOf(xe)||{}).t==='tau'){errs.push('Dòng '+(i+1)+': '+xe+' là tàu, nhập ở tab Tàu / Sà lan');return;}
+      const p=parseDay(c[0]); if(p.e){errs.push('Dòng '+(i+1)+': '+p.e);return;}
+      let route='',amt,vol=0;
+      if(c.length<=3&&parseNum(c[2])!=null){ amt=parseNum(c[2]); }
+      else { route=c[2]||''; amt=parseNum(c[3]); vol=parseNum(c[4])||0; }
+      if(!(amt>0)){errs.push('Dòng '+(i+1)+': doanh thu không hợp lệ');return;}
+      rows.push({d:p.d,x:xe,route,amt,vol,dr:(c.length>5?(c[5]||''):'').trim(),km1:parseNum(c[6])||0,cust:(c[7]||'').trim()});
+    });
+    return {rows,errs};
+  },
+  evt(text){
+    const rows=[],errs=[];
+    splitLines(text).forEach((c0,i)=>{
+      let c=lead(c0); if(i===0&&isHeader(c)) return;
+      const xe=matchXe(c[1]); if(!xe){errs.push('Dòng '+(i+1)+': không khớp biển số "'+(c[1]||'')+'"');return;}
+      const p=parseDay(c[0]); if(p.e){errs.push('Dòng '+(i+1)+': '+p.e);return;}
+      const s=parseTime(c[2]), e=parseTime(c[3]); if(s==null||e==null){errs.push('Dòng '+(i+1)+': giờ bắt đầu/kết thúc không hợp lệ');return;}
+      let dur=e-s; if(dur<0) dur+=1440;
+      const loc=c[4]||''; let t=null,auto=true;
+      const raw=(c[5]||'').toLowerCase();
+      if(raw){ auto=false; t=/trưa|ăn/.test(raw)?'Ăn trưa':/nhiên|xăng|dầu|đổ/.test(raw)?'Tiếp nhiên liệu':'Nghỉ khác'; }
+      else t=classify(s,dur,loc);
+      rows.push({d:p.d,x:xe,s,dur,loc,t,auto});
+    });
+    return {rows,errs};
+  }
+};
+function classify(s,dur,loc){
+  if(/(cây|trạm|cửa hàng)\s*xăng|tiếp nhiên liệu|đổ (xăng|dầu|nhiên liệu)/i.test(loc)) return 'Tiếp nhiên liệu';
+  if(s>=630&&s<=810&&dur>=20&&dur<=120) return 'Ăn trưa';
+  return 'Nghỉ khác';
+}
+
+/* ---------- dữ liệu mẫu (chỉ trong bộ nhớ, không lưu) ---------- */
+function makeDemo(){
+  let seed=20260901; const rnd=()=>{ seed=(seed*1664525+1013904223)%4294967296; return seed/4294967296; };
+  const fuel=[],rev=[],evt=[];
+  const routes=['Kho Nhà Bè → CHXD','Kho Nhà Bè → Đồng Nai','Kho Nhà Bè → Vĩnh Long','Kho Nhà Bè → Cần Thơ','Kho Nhà Bè → Lâm Đồng'];
+  DATA.forEach(r=>{
+    if(r.km<5) return;
+    fuel.push({d:r.d,x:r.x,l:+(r.km*(0.31+rnd()*0.09)).toFixed(1),cost:0});
+    const n=r.km<110?1:r.km<260?1+Math.round(rnd()):2+Math.round(rnd());
+    for(let k=0;k<n;k++) rev.push({d:r.d,x:r.x,route:routes[Math.floor(rnd()*routes.length)],amt:Math.round((6+rnd()*12)*1e6/1e4)*1e4,vol:Math.round(10+rnd()*20)*1000});
+    if(r.span>5*3600){
+      const ls=660+Math.round(rnd()*60), ld=25+Math.round(rnd()*40);
+      evt.push({d:r.d,x:r.x,s:ls,dur:ld,loc:'',t:'Ăn trưa',auto:true});
+      if(rnd()>.45) evt.push({d:r.d,x:r.x,s:480+Math.round(rnd()*300),dur:10+Math.round(rnd()*15),loc:'Trạm xăng',t:'Tiếp nhiên liệu',auto:true});
+      const o=Math.round(rnd()*2); for(let k=0;k<o;k++) evt.push({d:r.d,x:r.x,s:420+Math.round(rnd()*600),dur:10+Math.round(rnd()*35),loc:'',t:'Nghỉ khác',auto:true});
+    }
+  });
+  return {fuel,rev,evt};
+}
+const getFuel=()=>st.demo?(DEMO||(DEMO=makeDemo())).fuel:st.fuel;
+const getRev=()=>st.demo?(DEMO||(DEMO=makeDemo())).rev:st.rev;
+const getEvt=()=>st.demo?(DEMO||(DEMO=makeDemo())).evt:st.evt;
+
+/* ---------- tính toán ---------- */
+const inRange=d=>d>=st.from&&d<=st.to;
+const R=()=>DATA.filter(r=>st.sel.has(r.x)&&inRange(r.d));
+const isAct=r=>r.km>=st.thr;
+
+function V(){
+  const rs=R(), m={};
+  XE.forEach(x=>{ if(st.sel.has(x)) m[x]={x,km:0,aKm:0,days:0,act:0,use:0,idle:0,move:0,offs:0,stops:0,over:0,vmax:0,aUse:0,aIdle:0,aMove:0,aOffs:0,aStops:0}; });
+  rs.forEach(r=>{
+    const o=m[r.x]; o.days++; o.km+=r.km; o.use+=r.use; o.idle+=r.idle; o.move+=r.move; o.offs+=r.offs; o.stops+=r.st; o.over+=r.ov; o.vmax=Math.max(o.vmax,r.vm);
+    if(isAct(r)){ o.act++; o.aKm+=r.km; o.aUse+=r.use; o.aIdle+=r.idle; o.aMove+=r.move; o.aOffs+=r.offs; o.aStops+=r.st; }
+  });
+  const F=getFuel(), RV=getRev(), CM=costModel();
+  return Object.values(m).map(o=>{
+    const cr=CM.byX[o.x]; o.kmM=cr?cr.km:0; o.cost=cr&&cr.total>0?cr.total:null; o.cpk=cr&&cr.cpk?cr.cpk:null;
+    const fd=F.filter(f=>f.x===o.x&&f.d>0&&inRange(f.d));
+    const fm=F.filter(f=>f.x===o.x&&f.d===0);
+    const cost=f=>f.cost>0?f.cost:(st.price>0?f.l*st.price:0);
+    if(fd.length){
+      const ds=new Set(fd.map(f=>f.d));
+      o.fuel=sum(fd,'l'); o.fuelCost=sum(fd,cost); o.fuelKm=rs.filter(r=>r.x===o.x&&ds.has(r.d)).reduce((a,r)=>a+r.km,0); o.fuelDays=ds.size;
+    } else if(fm.length&&st.from===1&&st.to===MAXD){
+      o.fuel=sum(fm,'l'); o.fuelCost=sum(fm,cost); o.fuelKm=o.km; o.fuelDays=o.act;
+    } else { o.fuel=null; o.fuelCost=0; o.fuelKm=0; o.fuelDays=0; }
+    const rv=RV.filter(t=>t.x===o.x&&inRange(t.d));
+    o.rev=rv.length?sum(rv,'amt'):null; o.trips=sum(rv,tn); o.vol=sum(rv,'vol');
+    o.l100=o.fuel!=null&&o.fuelKm>0?o.fuel/o.fuelKm*100:null;
+    return o;
+  });
+}
+function tot(vs){
+  const t={km:0,aKm:0,days:0,act:0,use:0,idle:0,move:0,offs:0,stops:0,aStops:0,over:0,vmax:0,fuel:null,fuelKm:0,fuelCost:0,rev:null,trips:0,vol:0,cost:null,kmM:0};
+  vs.forEach(o=>{
+    ['km','aKm','days','act','use','idle','move','offs','stops','aStops','over','trips','vol'].forEach(k=>t[k]+=o[k]);
+    t.vmax=Math.max(t.vmax,o.vmax);
+    if(o.fuel!=null){ t.fuel=(t.fuel||0)+o.fuel; t.fuelKm+=o.fuelKm; t.fuelCost+=o.fuelCost; }
+    if(o.rev!=null){ t.rev=(t.rev||0)+o.rev; }
+    t.kmM+=o.kmM; if(o.cost!=null) t.cost=(t.cost||0)+o.cost;
+  });
+  t.l100=t.fuel!=null&&t.fuelKm>0?t.fuel/t.fuelKm*100:null;
+  return t;
+}
+const nDays=()=>st.to-st.from+1;
+const dayList=()=>{ const a=[]; for(let d=st.from;d<=st.to;d++) a.push(d); return a; };
+const hasCost=t=>t.fuel!=null&&t.fuelCost>0;
+
+/* ---------- biểu đồ ---------- */
+const charts=[];
+function kill(){ charts.splice(0).forEach(c=>{ try{c.destroy();}catch(e){} }); }
+function merge(a,b){ for(const k in b){ if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])){ a[k]=merge(a[k]&&typeof a[k]==='object'?a[k]:{},b[k]); } else a[k]=b[k]; } return a; }
+function opts(extra){
+  const muted=css('--muted'), line=css('--line'), ink=css('--ink');
+  return merge({
+    responsive:true, maintainAspectRatio:false, animation:{duration:250},
+    plugins:{ legend:{labels:{color:ink,boxWidth:10,usePointStyle:true,font:{size:12}}}, tooltip:{padding:10,boxPadding:4} },
+    scales:{ x:{ticks:{color:muted,font:{size:11}},grid:{color:line}}, y:{ticks:{color:muted,font:{size:11}},grid:{color:line}} }
+  },extra||{});
+}
+function mk(id,cfg){
+  const c=document.getElementById(id); if(!c) return;
+  if(typeof Chart==='undefined'){ c.parentNode.innerHTML='<div class="empty-state">Không tải được thư viện biểu đồ. Kiểm tra kết nối mạng rồi tải lại trang.</div>'; return; }
+  if(typeof Chart!=='undefined'&&Chart.defaults){ Chart.defaults.font.family=getComputedStyle(document.body).fontFamily; }
+  charts.push(new Chart(c,cfg));
+}
+const axisTitle=(t)=>({display:true,text:t,color:css('--muted'),font:{size:12}});
+
+/* ---------- khối giao diện dùng chung ---------- */
+function kpi(v,u,l,s,empty){ return '<div class="kpi'+(empty?' empty':'')+'"><div class="v">'+v+(u?'<small>'+u+'</small>':'')+'</div><div class="l">'+l+'</div>'+(s?'<div class="s">'+s+'</div>':'')+'</div>'; }
+function xeTag(x){ return '<span class="xe" style="--c:'+col(x)+'"><i></i>'+esc(x)+'</span>'; }
+function emptyState(t,d){ return '<div class="empty-state"><strong>'+t+'</strong>'+d+'</div>'; }
+
+function importBox(kind,title,cols,example,hint,extra){
+  const m=st.msg[kind];
+  return '<div class="panel imp"><h3>'+title+'</h3>'+
+  '<p class="sub">Copy các ô từ Excel (không cần dòng tiêu đề) rồi dán vào đây. Thứ tự cột: '+cols+'.</p>'+
+  '<p class="sub fmt">Ví dụ: <code>'+example+'</code>'+(hint?'<br>'+hint:'')+'</p>'+
+  '<textarea id="ta-'+kind+'" data-kind="'+kind+'" placeholder="Dán dữ liệu vào đây" spellcheck="false">'+esc(st.draft[kind])+'</textarea>'+
+  '<div class="row"><button class="btn primary" data-act="apply" data-kind="'+kind+'">Áp dụng (thay thế dữ liệu cũ)</button>'+
+  '<button class="btn" data-act="append" data-kind="'+kind+'">Thêm vào dữ liệu đã có</button>'+
+  '<button class="btn danger ghost" data-act="clear" data-kind="'+kind+'">Xóa dữ liệu đã nhập</button>'+(extra||'')+'</div>'+
+  (m?'<div class="msg '+(m.ok?'ok':'err')+'">'+m.t+'</div>':'')+
+  '<div class="note" style="margin-top:6px">Dữ liệu được lưu trên trình duyệt này. Mở ở máy khác cần dán lại, nên hãy giữ file Excel gốc.</div></div>';
+}
+
+/* ---------- Tab: Tổng quan ---------- */
+function insights(vs,t){
+  const L=[]; const nd=nDays(), slots=vs.length*nd; if(!vs.length||!slots) return L;
+  const top=[...vs].sort((a,b)=>b.km-a.km)[0];
+  L.push('Đội xe chạy <b>'+nf(t.km)+' km</b>. Xe '+esc(top.x)+' chạy nhiều nhất với <b>'+nf(top.km)+' km</b> ('+pct(top.km,t.km)+' tổng quãng đường).');
+  L.push('Mỗi xe mỗi ngày tính là 1 "ngày-xe": '+vs.length+' xe × '+nd+' ngày = '+slots+' ngày-xe. Chỉ <b>'+t.act+' ngày-xe ('+pct(t.act,slots)+')</b> có chạy từ '+st.thr+' km trở lên, tức trung bình <b>'+nf(t.act/nd,1)+' xe</b> hoạt động mỗi ngày trong số '+vs.length+' xe.');
+  const low=[...vs].sort((a,b)=>a.act-b.act)[0];
+  if(vs.length>1) L.push('Xe '+esc(low.x)+' ít hoạt động nhất: <b>'+low.act+' ngày chạy</b> trong '+nd+' ngày.');
+  const idl=[...vs].filter(o=>o.use>0).sort((a,b)=>b.idle/b.use-a.idle/a.use)[0];
+  if(idl) L.push('Xe '+esc(idl.x)+' có <b>'+pct(idl.idle,idl.use)+'</b> thời gian nổ máy là đứng yên (dừng nổ máy: '+nf(hrs(idl.idle),1)+' giờ).');
+  const zero=dayList().filter(d=>!R().some(r=>r.d===d&&isAct(r))).length;
+  if(zero>0) L.push('Có <b>'+zero+' ngày</b> trong khoảng đã chọn không có xe nào chạy từ '+st.thr+' km.');
+  if(t.over>0) L.push('Ghi nhận <b>'+t.over+' lần vượt tốc</b>; tốc độ cao nhất '+t.vmax+' km/h.');
+  if(t.rev>0&&t.trips>0) L.push('Bảng kê doanh thu tháng 9 ghi nhận <b>'+money(t.rev)+' đ</b> từ <b>'+t.trips+' chuyến</b>'+(t.vol>0?' ('+nf(t.vol)+' lít, cước bình quân '+nf(t.rev/t.vol,1)+' đ/lít)':'')+(st.demo?' (số mẫu)':'')+'.');
+  if(t.cost>0&&t.kmM>0){ const nlc=sum(vs.map(o=>costModel().byX[o.x]).filter(Boolean),o=>o.direct.nl); L.push('Chi phí vận hành cả tháng (gồm thu nhập tài xế tạm tính) của các xe đang chọn là <b>'+money(t.cost)+' đ</b> (<b>'+nf(t.cost/t.kmM)+' đ/km</b>), nhiên liệu chiếm '+pct(nlc,t.cost)+'.'); }
+  return L;
+}
+function heatmap(){
+  const rs=R(), days=dayList(), xs=XE.filter(x=>st.sel.has(x));
+  const max=rs.reduce((m,r)=>Math.max(m,r.km),1);
+  let h='<div class="hm-scroll"><div class="hm" style="--cols:'+days.length+'"><div></div>';
+  days.forEach(d=>{ const w=WD[d]||''; h+='<div class="h'+((w==='T7'||w==='CN')?' we':'')+'">'+d+'<br>'+w+'</div>'; });
+  xs.forEach(x=>{
+    h+='<div class="rl" style="--c:'+col(x)+'"><i></i>'+esc(x)+'</div>';
+    days.forEach(d=>{
+      const r=DATA.find(q=>q.x===x&&q.d===d); const km=r?r.km:0; const on=km>=st.thr;
+      const p=km<=0?0:Math.max(10,Math.round(km/max*100));
+      const bg=km>0?'background:color-mix(in srgb,var(--accent) '+p+'%,var(--cell0))':'';
+      const sel=st.pick&&st.pick.x===x&&st.pick.d===d?' sel':'';
+      h+='<button class="c'+(p>55?' hi':'')+sel+'" style="'+bg+'" data-act="pick" data-x="'+esc(x)+'" data-d="'+d+'" aria-label="'+esc(x)+' ngày '+d+': '+nf(km,1)+' km" title="'+esc(x)+' · ngày '+d+' · '+nf(km,1)+' km">'+(on?Math.round(km):'')+'</button>';
+    });
+  });
+  h+='<div class="rl dim" style="font-weight:400">Số xe chạy</div>';
+  days.forEach(d=>{ h+='<div class="cnt">'+rs.filter(r=>r.d===d&&isAct(r)).length+'</div>'; });
+  h+='</div></div><div class="legend"><span>Ít</span><span class="bar"></span><span>Nhiều (tối đa '+nf(max)+' km/ngày)</span></div>';
+  h+='<div class="detail" id="pickDetail">'+pickDetail()+'</div>';
+  return h;
+}
+function pickDetail(){
+  if(!st.pick) return '<span class="dim">Bấm vào một ô để xem chi tiết xe và ngày đó.</span>';
+  const r=DATA.find(q=>q.x===st.pick.x&&q.d===st.pick.d); if(!r) return '';
+  const ev=getEvt().filter(e=>e.x===r.x&&e.d===r.d);
+  return '<b>'+esc(r.x)+'</b> · ngày '+r.d+' ('+r.w+'): <b>'+nf(r.km,1)+' km</b>'+
+    (r.a?' · mở máy '+r.a.slice(0,5)+' – tắt máy '+r.b.slice(0,5):' · không có chạy máy')+
+    ' · nổ máy '+hm(r.use)+' (đứng yên '+hm(r.idle)+') · '+r.st+' lần dừng · tốc độ tối đa '+r.vm+' km/h'+
+    '<br><span class="dim">'+esc(r.p0)+' → '+esc(r.p1)+'</span>'+
+    (ev.length?'<br>Nghỉ ghi nhận: '+ev.map(e=>esc(e.t)+' '+e.dur+'\u2009phút').join(', '):'');
+}
+const COLS=[
+  {k:'x',l:'Xe',s:o=>o.x,f:o=>xeTag(o.x)},
+  {k:'km',l:'Quãng đường (km)',n:1,s:o=>o.km,f:(o,t)=>'<span class="bar-cell" style="width:'+Math.round(o.km/Math.max(t.maxKm,1)*60)+'px"></span>'+nf(o.km)},
+  {k:'act',l:'Ngày chạy',n:1,s:o=>o.act,f:o=>o.act+'/'+o.days},
+  {k:'kpd',l:'Km/ngày chạy',n:1,s:o=>o.act?o.aKm/o.act:-1,f:o=>o.act?nf(o.aKm/o.act):'—'},
+  {k:'use',l:'Giờ nổ máy',n:1,s:o=>o.use,f:o=>nf(hrs(o.use),1)},
+  {k:'idle',l:'% đứng yên',n:1,s:o=>o.use?o.idle/o.use:-1,f:o=>pct(o.idle,o.use)},
+  {k:'stops',l:'Lần dừng',n:1,s:o=>o.stops,f:o=>nf(o.stops)},
+  {k:'spd',l:'Km/lít',n:1,hide:'fuel',s:o=>o.l100?100/o.l100:-1,f:o=>o.l100?nf(100/o.l100,2):'—'},
+  {k:'l100',l:'L/100km',n:1,hide:'fuel',s:o=>o.l100==null?-1:o.l100,f:o=>nf(o.l100,1)},
+  {k:'rev',l:'Doanh thu (tr đ)',n:1,hide:'rev',s:o=>o.rev==null?-1:o.rev,f:o=>o.rev==null?'—':nf(o.rev/1e6,1)},
+  {k:'rpk',l:'Doanh thu/km (đ)',n:1,hide:'rev',s:o=>o.rev!=null&&o.km?o.rev/o.km:-1,f:o=>o.rev!=null&&o.km?nf(o.rev/o.km):'—'},
+  {k:'cost',l:'Chi phí cả tháng (tr đ)',n:1,hide:'cost',s:o=>o.cost==null?-1:o.cost,f:o=>o.cost==null?'—':nf(o.cost/1e6,1)},
+  {k:'cpk',l:'Chi phí/km (đ)',n:1,hide:'cost',s:o=>o.cpk==null?-1:o.cpk,f:o=>o.cpk==null?'—':nf(o.cpk)}
+];
+function vTong(){
+  const vs=V(), t=tot(vs), nd=nDays(), slots=vs.length*nd;
+  if(!vs.length) return emptyState('Chưa chọn xe nào','Bật ít nhất một xe ở bộ lọc phía trên.');
+  t.maxKm=Math.max(...vs.map(o=>o.km),1);
+  let h='';
+  const ins=insights(vs,t); h+='<ul class="insights">'+ins.map(i=>'<li>'+i+'</li>').join('')+'</ul>';
+  h+='<div class="kpis">'+
+    kpi(nf(t.km),'km','Quãng đường',vs.length+' xe · '+nd+' ngày')+
+    kpi(t.act+'<small>/'+slots+'</small>','','Ngày-xe có chạy (≥ '+st.thr+' km)',vs.length+' xe × '+nd+' ngày = '+slots+' · '+pct(t.act,slots))+
+    kpi(t.act?nf(t.aKm/t.act):'—','km','Km trung bình mỗi ngày chạy','Tính trên các ngày có chạy')+
+    kpi(nf(hrs(t.use)),'giờ','Thời gian nổ máy','Đứng yên: '+pct(t.idle,t.use)+' · Chạy: '+nf(hrs(t.move))+' giờ')+
+    kpi(nf(t.stops),'lần','Số lần dừng xe',t.act?'TB '+nf(t.aStops/t.act,1)+' lần/ngày chạy':'')+
+    kpi(nf(t.over),'lần','Vượt tốc','Tốc độ tối đa '+t.vmax+' km/h')+
+    (t.cost>0?kpi(money(t.cost),'đ','Chi phí vận hành','Cả tháng 9, gồm thu nhập tài xế tạm tính · '+nf(t.kmM>0?t.cost/t.kmM:null)+' đ/km'):kpi('Chưa có','','Chi phí vận hành','Nhập ở tab Chi phí',1))+
+    (t.fuel!=null?kpi(nf(t.l100,1),'L/100km','Tiêu hao nhiên liệu',nf(t.fuel)+' lít'+(st.demo?' (số mẫu)':'')):kpi('Chưa có','', 'Tiêu hao nhiên liệu','Nhập ở tab Nhiên liệu',1))+
+    (t.rev!=null?kpi(money(t.rev),'đ','Doanh thu',nf(t.trips)+' chuyến'+(st.demo?' (số mẫu)':'')):kpi('Chưa có','','Doanh thu','Nhập ở tab Doanh thu',1))+
+  '</div>';
+  h+='<h2>Lịch hoạt động của từng xe</h2><p class="sub">Mỗi ô là một ngày, đậm hơn nghĩa là chạy nhiều km hơn. Số trong ô là km chạy được (chỉ hiện từ ngưỡng '+st.thr+' km).</p><div class="panel">'+heatmap()+'</div>';
+  h+='<h2>Quãng đường theo ngày</h2><div class="g2"><div class="panel"><h3>Km mỗi ngày, theo xe</h3><div class="chart"><canvas id="ch-daykm"></canvas></div></div>'+
+     '<div class="panel"><h3>Tổng km và số ngày chạy của từng xe</h3><div class="chart"><canvas id="ch-vehkm"></canvas></div></div></div>';
+  h+='<h2>So sánh các xe</h2><div class="panel"><div class="scroll">'+vehTable(vs,t)+'</div></div>';
+  return h;
+}
+function vehTable(vs,t){
+  const showFuel=t.fuel!=null, showRev=t.rev!=null, showCost=t.cost>0;
+  const cols=COLS.filter(c=>!c.hide||(c.hide==='fuel'&&showFuel)||(c.hide==='rev'&&showRev)||(c.hide==='cost'&&showCost));
+  const sc=COLS.find(c=>c.k===st.sort.k)||COLS[1];
+  const arr=[...vs].sort((a,b)=>{ const x=sc.s(a),y=sc.s(b); return (x>y?1:x<y?-1:0)*st.sort.dir; });
+  let h='<table class="tbl"><thead><tr>'+cols.map(c=>'<th class="s'+(c.n?' n':'')+'" data-act="sort" data-k="'+c.k+'">'+c.l+(st.sort.k===c.k?(st.sort.dir<0?' ▼':' ▲'):'')+'</th>').join('')+'</tr></thead><tbody>';
+  arr.forEach(o=>{ h+='<tr>'+cols.map(c=>'<td'+(c.n?' class="n"':'')+'>'+c.f(o,t)+'</td>').join('')+'</tr>'; });
+  const tt={x:'Toàn đội',km:t.km,aKm:t.aKm,act:t.act,days:t.days,use:t.use,idle:t.idle,stops:t.stops,l100:t.l100,rev:t.rev,cost:t.cost,cpk:t.cost>0&&t.kmM>0?t.cost/t.kmM:null};
+  h+='</tbody><tfoot><tr>'+cols.map(c=>{ const f=c.k==='x'?'Toàn đội':c.f(tt,t); return '<td'+(c.n?' class="n"':'')+'>'+(c.k==='km'?nf(t.km):f)+'</td>'; }).join('')+'</tr></tfoot></table>';
+  return h;
+}
+function cTong(){
+  const vs=V(); if(!vs.length) return; const days=dayList(), rs=R();
+  mk('ch-daykm',{type:'bar',data:{labels:days,datasets:vs.map(o=>({label:o.x,backgroundColor:col(o.x),data:days.map(d=>{const r=rs.find(q=>q.x===o.x&&q.d===d);return r?r.km:0;}),borderRadius:2}))},
+    options:opts({scales:{x:{stacked:true,title:axisTitle('Ngày trong tháng 9')},y:{stacked:true,title:axisTitle('km')}},plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+nf(c.parsed.y,1)+' km'}}}})});
+  mk('ch-vehkm',{type:'bar',data:{labels:vs.map(o=>o.x),datasets:[
+      {label:'Tổng km',backgroundColor:vs.map(o=>col(o.x)),data:vs.map(o=>Math.round(o.km)),yAxisID:'y',borderRadius:4},
+      {type:'line',label:'Số ngày chạy',data:vs.map(o=>o.act),yAxisID:'y1',borderColor:css('--ink'),backgroundColor:css('--ink'),pointRadius:5,showLine:false}]},
+    options:opts({scales:{y:{title:axisTitle('km'),beginAtZero:true},y1:{position:'right',beginAtZero:true,suggestedMax:Math.max(nDays(),1),grid:{drawOnChartArea:false},ticks:{color:css('--muted')},title:axisTitle('ngày chạy')}}})});
+}
+
+/* ---------- Tab: Quãng đường ---------- */
+function vKm(){
+  const vs=V(), t=tot(vs); if(!vs.length) return emptyState('Chưa chọn xe nào','Bật ít nhất một xe ở bộ lọc phía trên.');
+  const rs=R().filter(isAct).sort((a,b)=>b.km-a.km).slice(0,10);
+  let h='<div class="g2"><div class="panel"><h3>Km lũy kế trong tháng</h3><div class="chart tall"><canvas id="ch-cum"></canvas></div></div>'+
+   '<div class="panel"><h3>Km trung bình mỗi ngày chạy, theo xe</h3><div class="chart tall"><canvas id="ch-kpd"></canvas></div></div></div>';
+  h+='<h2>Quãng đường theo thứ trong tuần</h2><div class="g2"><div class="panel"><h3>Km trung bình của cả đội mỗi ngày</h3><div class="chart"><canvas id="ch-wd"></canvas></div></div>'+
+   '<div class="panel"><h3>Phân bổ ngày chạy theo mức quãng đường</h3><div class="chart"><canvas id="ch-band"></canvas></div></div></div>';
+  h+='<h2>10 ngày chạy dài nhất</h2><div class="panel"><div class="scroll"><table class="tbl"><thead><tr><th>Xe</th><th>Ngày</th><th class="n">Km</th><th class="n">Giờ nổ máy</th><th class="n">Tốc độ tối đa</th><th>Điểm đầu ngày</th><th>Điểm cuối ngày</th></tr></thead><tbody>'+
+   rs.map(r=>'<tr><td>'+xeTag(r.x)+'</td><td>'+r.d+' ('+r.w+')</td><td class="n">'+nf(r.km,1)+'</td><td class="n">'+hm(r.use)+'</td><td class="n">'+r.vm+' km/h</td><td>'+esc(r.p0)+'</td><td>'+esc(r.p1)+'</td></tr>').join('')+
+   '</tbody></table></div></div>';
+  return h;
+}
+function cKm(){
+  const vs=V(); if(!vs.length) return; const days=dayList(), rs=R();
+  mk('ch-cum',{type:'line',data:{labels:days,datasets:vs.map(o=>{let c=0;return{label:o.x,borderColor:col(o.x),backgroundColor:col(o.x),pointRadius:0,borderWidth:2.5,tension:.15,data:days.map(d=>{const r=rs.find(q=>q.x===o.x&&q.d===d);c+=r?r.km:0;return +c.toFixed(1);})};})},
+    options:opts({interaction:{mode:'index',intersect:false},scales:{x:{title:axisTitle('Ngày trong tháng 9')},y:{title:axisTitle('km lũy kế'),beginAtZero:true}}})});
+  mk('ch-kpd',{type:'bar',data:{labels:vs.map(o=>o.x),datasets:[{label:'Km/ngày chạy',backgroundColor:vs.map(o=>col(o.x)),borderRadius:4,data:vs.map(o=>o.act?Math.round(o.aKm/o.act):0)}]},
+    options:opts({indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{title:axisTitle('km mỗi ngày chạy'),beginAtZero:true}}})});
+  const order=['T2','T3','T4','T5','T6','T7','CN']; const cnt={}; days.forEach(d=>{cnt[WD[d]]=(cnt[WD[d]]||0)+1;}); const km={}; rs.forEach(r=>{km[r.w]=(km[r.w]||0)+r.km;});
+  const wl=order.filter(w=>cnt[w]);
+  mk('ch-wd',{type:'bar',data:{labels:wl,datasets:[{label:'Km TB/ngày',backgroundColor:css('--accent'),borderRadius:4,data:wl.map(w=>Math.round((km[w]||0)/cnt[w]))}]},options:opts({plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:axisTitle('km/ngày, toàn đội')}}})});
+  const bands=[['Nghỉ (<'+st.thr+' km)',r=>r.km<st.thr],['Ngắn ('+st.thr+'–100 km)',r=>r.km>=st.thr&&r.km<100],['Vừa (100–250 km)',r=>r.km>=100&&r.km<250],['Dài (250–400 km)',r=>r.km>=250&&r.km<400],['Rất dài (≥400 km)',r=>r.km>=400]];
+  mk('ch-band',{type:'bar',data:{labels:vs.map(o=>o.x),datasets:bands.map((b,i)=>({label:b[0],backgroundColor:['#C6D0D9','#8FD3E3','#35A7C4','#1C6E8C','#0B3D55'][i],data:vs.map(o=>rs.filter(r=>r.x===o.x&&b[1](r)).length)}))},
+    options:opts({scales:{x:{stacked:true},y:{stacked:true,title:axisTitle('số ngày'),beginAtZero:true}}})});
+}
+
+/* ---------- Tab: Thời gian & nghỉ ---------- */
+function vTime(){
+  const vs=V(), t=tot(vs); if(!vs.length) return emptyState('Chưa chọn xe nào','Bật ít nhất một xe ở bộ lọc phía trên.');
+  let h='<div class="kpis">'+
+    kpi(nf(hrs(t.move)),'giờ','Thời gian di chuyển','Cả đội, trong khoảng đã chọn')+
+    kpi(nf(hrs(t.idle)),'giờ','Dừng nổ máy',pct(t.idle,t.use)+' thời gian nổ máy')+
+    kpi(nf(hrs(t.offs)),'giờ','Dừng tắt máy giữa ca','Từ lúc mở máy đầu đến tắt máy cuối')+
+    kpi(nf(t.stops),'lần','Tổng số lần dừng',t.act?'TB '+nf(t.aStops/t.act,1)+' lần/ngày chạy':'')+
+  '</div>';
+  h+='<div class="g2"><div class="panel"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><h3 style="margin:0">Một ngày làm việc của xe được dùng thế nào</h3>'+
+   '<div class="seg"><button data-act="tmode" data-m="avg" aria-pressed="'+(st.timeMode==='avg')+'">TB mỗi ngày chạy</button><button data-act="tmode" data-m="sum" aria-pressed="'+(st.timeMode==='sum')+'">Tổng cả kỳ</button></div></div>'+
+   '<p class="sub" style="margin-top:6px">Giờ di chuyển = nổ máy trừ dừng nổ máy. Dừng tắt máy giữa ca = khoảng từ lần mở máy đầu đến lần tắt máy cuối mà xe tắt máy.</p><div class="chart"><canvas id="ch-time"></canvas></div></div>'+
+   '<div class="panel"><h3>Số lần dừng mỗi ngày chạy</h3><div class="chart"><canvas id="ch-stops"></canvas></div></div></div>';
+  h+='<h2>Dừng nổ máy theo ngày</h2><div class="panel"><p class="sub">Xe đứng yên nhưng máy vẫn nổ (chờ nhập/xuất hàng, chạy bơm, chờ lệnh…). Giờ mỗi ngày, theo xe.</p><div class="chart"><canvas id="ch-idle"></canvas></div></div>';
+  h+='<h2>Chi tiết theo xe</h2><div class="panel"><div class="scroll"><table class="tbl"><thead><tr><th>Xe</th><th class="n">Ngày chạy</th><th class="n">Giờ di chuyển</th><th class="n">Giờ dừng nổ máy</th><th class="n">Giờ dừng tắt máy giữa ca</th><th class="n">Số lần dừng</th><th class="n">Dừng/ngày chạy</th><th class="n">Tốc độ TB khi chạy (km/h)</th><th class="n">Vượt tốc</th></tr></thead><tbody>'+
+   vs.map(o=>'<tr><td>'+xeTag(o.x)+'</td><td class="n">'+o.act+'</td><td class="n">'+nf(hrs(o.move),1)+'</td><td class="n">'+nf(hrs(o.idle),1)+'</td><td class="n">'+nf(hrs(o.offs),1)+'</td><td class="n">'+o.stops+'</td><td class="n">'+(o.act?nf(o.aStops/o.act,1):'—')+'</td><td class="n">'+(o.move?nf(o.km/hrs(o.move),1):'—')+'</td><td class="n">'+o.over+'</td></tr>').join('')+'</tbody></table></div></div>';
+  h+='<h2>Nghỉ ăn trưa, tiếp nhiên liệu và nghỉ khác</h2>'+eventsBlock(vs);
+  return h;
+}
+function eventsBlock(vs){
+  const E=getEvt().filter(e=>st.sel.has(e.x)&&inRange(e.d));
+  let h='<p class="sub">File báo cáo hiện có chỉ cho biết tổng số lần dừng và tổng giờ theo ngày, chưa tách được lý do dừng. Để phân loại, dán thêm danh sách điểm dừng chi tiết (giờ bắt đầu, giờ kết thúc, địa điểm).</p>';
+  if(!E.length){
+    h+='<div class="g2"><div class="panel">'+emptyState('Chưa có dữ liệu điểm dừng','Dán danh sách điểm dừng vào ô bên cạnh để xem số lần và thời gian nghỉ theo từng loại.')+'</div>'+
+       importBox('evt','Nhập điểm dừng chi tiết','Ngày, Biển số, Giờ bắt đầu, Giờ kết thúc, Địa điểm (tùy chọn), Loại (tùy chọn)','05/09/2026 &nbsp; 65H-029.54 &nbsp; 11:40 &nbsp; 12:25 &nbsp; Quán cơm Nhà Bè','Bỏ trống cột Loại: hệ thống tự phân loại. Dừng 20–120 phút trong khung 10:30–13:30 tính là ăn trưa; địa điểm có "cây xăng/trạm xăng" tính là tiếp nhiên liệu; còn lại là nghỉ khác. Có thể sửa từng dòng sau khi nhập.')+'</div>';
+    return h;
+  }
+  const by={}; vs.forEach(o=>{ by[o.x]={}; TYPES.forEach(k=>by[o.x][k]={n:0,m:0}); });
+  E.forEach(e=>{ if(by[e.x]){ by[e.x][e.t].n++; by[e.x][e.t].m+=e.dur; } });
+  const tt={}; TYPES.forEach(k=>tt[k]={n:0,m:0}); vs.forEach(o=>TYPES.forEach(k=>{tt[k].n+=by[o.x][k].n; tt[k].m+=by[o.x][k].m;}));
+  h+='<div class="kpis">'+TYPES.map(k=>kpi(nf(tt[k].n),'lần',k,tt[k].n?'Tổng '+nf(tt[k].m/60,1)+' giờ · TB '+nf(tt[k].m/tt[k].n)+' phút/lần':'')).join('')+'</div>';
+  h+='<div class="g2"><div class="panel"><h3>Thời gian nghỉ theo loại (giờ)</h3><div class="chart"><canvas id="ch-evt"></canvas></div></div>'+
+   '<div class="panel"><h3>Số lần và thời gian trung bình</h3><div class="scroll"><table class="tbl"><thead><tr><th>Xe</th>'+TYPES.map(k=>'<th class="n">'+k+'<br><span class="dim" style="font-weight:400">lần · phút/lần</span></th>').join('')+'</tr></thead><tbody>'+
+   vs.map(o=>'<tr><td>'+xeTag(o.x)+'</td>'+TYPES.map(k=>{const q=by[o.x][k];return '<td class="n">'+q.n+' · '+(q.n?nf(q.m/q.n):'—')+'</td>';}).join('')+'</tr>').join('')+'</tbody></table></div></div></div>';
+  const list=E.slice().sort((a,b)=>a.d-b.d||a.x.localeCompare(b.x)||a.s-b.s);
+  h+='<h3 style="margin-top:18px">Danh sách điểm dừng'+(list.length>150?' (150 dòng đầu)':'')+'</h3><div class="panel"><div class="scroll" style="max-height:380px"><table class="tbl"><thead><tr><th>Ngày</th><th>Xe</th><th>Bắt đầu</th><th class="n">Phút</th><th>Địa điểm</th><th>Loại</th></tr></thead><tbody>'+
+   list.slice(0,150).map(e=>{ const i=getEvt().indexOf(e); return '<tr><td>'+e.d+'</td><td>'+xeTag(e.x)+'</td><td>'+hm(e.s*60)+'</td><td class="n">'+e.dur+'</td><td>'+esc(e.loc)+'</td><td>'+(st.demo?esc(e.t):'<select class="sel" data-act="settype" data-i="'+i+'">'+TYPES.map(k=>'<option'+(k===e.t?' selected':'')+'>'+k+'</option>').join('')+'</select>'+(e.auto?'<span class="tag">tự phân loại</span>':''))+'</td></tr>'; }).join('')+'</tbody></table></div></div>';
+  h+='<div style="margin-top:14px">'+importBox('evt','Nhập thêm hoặc thay điểm dừng','Ngày, Biển số, Giờ bắt đầu, Giờ kết thúc, Địa điểm (tùy chọn), Loại (tùy chọn)','05/09/2026 &nbsp; 65H-029.54 &nbsp; 11:40 &nbsp; 12:25 &nbsp; Quán cơm Nhà Bè','')+'</div>';
+  return h;
+}
+function cTime(){
+  const vs=V(); if(!vs.length) return; const days=dayList(), rs=R(), avg=st.timeMode==='avg';
+  const val=(o,a,b)=>avg?(o.act?hrs(o[a])/o.act:0):hrs(o[b]);
+  mk('ch-time',{type:'bar',data:{labels:vs.map(o=>o.x),datasets:[
+    {label:'Di chuyển',backgroundColor:TC.move,data:vs.map(o=>+val(o,'aMove','move').toFixed(2))},
+    {label:'Dừng nổ máy',backgroundColor:TC.idle,data:vs.map(o=>+val(o,'aIdle','idle').toFixed(2))},
+    {label:'Dừng tắt máy giữa ca',backgroundColor:TC.off,data:vs.map(o=>+val(o,'aOffs','offs').toFixed(2))}]},
+    options:opts({indexAxis:'y',scales:{x:{stacked:true,title:axisTitle(avg?'giờ mỗi ngày chạy':'giờ')},y:{stacked:true}},plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+nf(c.parsed.x,1)+' giờ'}}}})});
+  mk('ch-stops',{type:'bar',data:{labels:vs.map(o=>o.x),datasets:[{label:'Lần dừng/ngày chạy',backgroundColor:vs.map(o=>col(o.x)),borderRadius:4,data:vs.map(o=>o.act?+(o.aStops/o.act).toFixed(1):0)}]},
+    options:opts({plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:axisTitle('lần dừng')}}})});
+  mk('ch-idle',{type:'bar',data:{labels:days,datasets:vs.map(o=>({label:o.x,backgroundColor:col(o.x),data:days.map(d=>{const r=rs.find(q=>q.x===o.x&&q.d===d);return r?+hrs(r.idle).toFixed(2):0;})}))},
+    options:opts({scales:{x:{stacked:true,title:axisTitle('Ngày trong tháng 9')},y:{stacked:true,title:axisTitle('giờ dừng nổ máy')}},plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+nf(c.parsed.y,1)+' giờ'}}}})});
+  const E=getEvt().filter(e=>st.sel.has(e.x)&&inRange(e.d));
+  if(E.length) mk('ch-evt',{type:'bar',data:{labels:vs.map(o=>o.x),datasets:TYPES.map(k=>({label:k,backgroundColor:TCOL[k],data:vs.map(o=>+(sum(E.filter(e=>e.x===o.x&&e.t===k),'dur')/60).toFixed(2))}))},
+    options:opts({scales:{x:{stacked:true},y:{stacked:true,title:axisTitle('giờ')}}})});
+}
+
+/* ---------- Tab: Nhiên liệu ---------- */
+function vFuel(){
+  const vs=V(), t=tot(vs); const F=getFuel();
+  let h=fuelCostBlock(vs);
+  if(!F.length){
+    h+='<div class="g2"><div class="panel">'+emptyState('Chưa có số liệu nhiên liệu','Dán số lít tiêu thụ của từng xe để tính L/100km, lít mỗi ngày chạy và chi phí nhiên liệu trên mỗi km.')+'</div>'+
+    importBox('fuel','Nhập nhiên liệu tiêu thụ','Ngày, Biển số, Số lít, Thành tiền (tùy chọn)','05/09/2026 &nbsp; 65H-029.54 &nbsp; 82,5 &nbsp; 1.650.000','Số lít dùng dấu phẩy thập phân (82,5); "1.800" được hiểu là 1800 lít. Chỉ có tổng cả tháng? Để trống cột Ngày (hoặc ghi "Tổng"), mỗi xe một dòng; số tổng tháng chỉ dùng khi khoảng ngày là cả tháng.')+'</div>';
+    return h;
+  }
+  h+='<div class="kpis">'+
+   kpi(t.fuel!=null?nf(t.fuel):'—','lít','Nhiên liệu tiêu thụ',st.demo?'Số mẫu':'')+
+   kpi(nf(t.l100,1),'L/100km','Tiêu hao bình quân',t.l100?'≈ '+nf(100/t.l100,2)+' km/lít':'')+
+   kpi(t.fuel!=null&&t.act?nf(t.fuel/t.act,1):'—','lít','Lít mỗi ngày chạy','Tính trên '+t.act+' ngày-xe chạy')+
+   (hasCost(t)?kpi(money(t.fuelCost),'đ','Chi phí nhiên liệu',t.fuelKm?nf(t.fuelCost/t.fuelKm)+' đ/km':''):kpi('Chưa có','','Chi phí nhiên liệu','Nhập thành tiền hoặc đơn giá bên dưới',1))+
+  '</div>';
+  h+='<div class="g2"><div class="panel"><h3>Tiêu hao L/100km theo xe</h3><div class="chart"><canvas id="ch-l100"></canvas></div></div>'+
+     '<div class="panel"><h3>Nhiên liệu theo ngày (lít)</h3><div class="chart"><canvas id="ch-fday"></canvas></div></div></div>';
+  h+='<h2>Chi tiết theo xe</h2><div class="panel"><div class="scroll"><table class="tbl"><thead><tr><th>Xe</th><th class="n">Lít</th><th class="n">Km tương ứng</th><th class="n">L/100km</th><th class="n">Km/lít</th><th class="n">Lít/ngày chạy</th><th class="n">Chi phí (đ)</th><th class="n">Chi phí/km (đ)</th></tr></thead><tbody>'+
+    vs.map(o=>'<tr><td>'+xeTag(o.x)+'</td><td class="n">'+(o.fuel!=null?nf(o.fuel,1):'—')+'</td><td class="n">'+(o.fuel!=null?nf(o.fuelKm):'—')+'</td><td class="n">'+nf(o.l100,1)+'</td><td class="n">'+(o.l100?nf(100/o.l100,2):'—')+'</td><td class="n">'+(o.fuel!=null&&o.fuelDays?nf(o.fuel/o.fuelDays,1):'—')+'</td><td class="n">'+(o.fuelCost>0?vnd(o.fuelCost):'—')+'</td><td class="n">'+(o.fuelCost>0&&o.fuelKm?nf(o.fuelCost/o.fuelKm):'—')+'</td></tr>').join('')+'</tbody></table></div>'+
+    '<p class="note" style="margin:10px 0 0">Km tương ứng là quãng đường GPS của đúng những ngày có số liệu nhiên liệu, để L/100km không bị lệch khi thiếu ngày.</p></div>';
+  h+='<div class="g2" style="margin-top:16px"><div class="panel"><h3>Đơn giá nhiên liệu</h3><p class="sub">Dùng để tính chi phí khi bảng nhập không có cột thành tiền.</p><div class="price"><input type="text" inputmode="decimal" id="price" value="'+(st.price||'')+'" placeholder="vd. 19.500"><span>đồng/lít</span></div></div>'+
+     importBox('fuel','Nhập thêm hoặc thay số liệu nhiên liệu','Ngày, Biển số, Số lít, Thành tiền (tùy chọn)','05/09/2026 &nbsp; 65H-029.54 &nbsp; 82,5 &nbsp; 1.650.000','')+'</div>';
+  return h;
+}
+function cFuel(){
+  const vs=V(), F=getFuel(); if(!vs.length) return; fuelCostChart(vs); if(!F.length) return; const days=dayList();
+  const w=vs.filter(o=>o.l100!=null);
+  mk('ch-l100',{type:'bar',data:{labels:w.map(o=>o.x),datasets:[{label:'L/100km',backgroundColor:w.map(o=>col(o.x)),borderRadius:4,data:w.map(o=>+o.l100.toFixed(1))}]},options:opts({plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:axisTitle('lít / 100 km')}}})});
+  mk('ch-fday',{type:'bar',data:{labels:days,datasets:vs.map(o=>({label:o.x,backgroundColor:col(o.x),data:days.map(d=>+sum(F.filter(f=>f.x===o.x&&f.d===d),'l').toFixed(1))}))},options:opts({scales:{x:{stacked:true,title:axisTitle('Ngày trong tháng 9')},y:{stacked:true,title:axisTitle('lít')}}})});
+}
+
+/* ---------- Tab: Doanh thu ---------- */
+function vRev(){
+  const vs=V(), t=tot(vs); const RV=getRev(); let h='';
+  if(!RV.length){
+    h+='<div class="g2"><div class="panel">'+emptyState('Chưa có số liệu doanh thu','Dán danh sách chuyến (mỗi dòng một chuyến) để xem doanh thu theo ngày, doanh thu mỗi chuyến, mỗi km và chênh lệch với chi phí.')+'</div>'+
+    importBox('rev','Nhập doanh thu từng chuyến','Ngày, Biển số, Tuyến hoặc mã chuyến, Doanh thu (đồng), Khối lượng lít (tùy chọn), Tài xế (tùy chọn), Km một lượt giao (tùy chọn), Khách hàng (tùy chọn)','05/09/2026 &nbsp; 65H-029.54 &nbsp; Nhà Bè – Vĩnh Long &nbsp; 12.500.000 &nbsp; 24.000','Mỗi dòng là một chuyến. Nếu chỉ có 3 cột (Ngày, Biển số, Doanh thu) hệ thống vẫn đọc được.','<button class="btn ghost" data-act="restorerev">Khôi phục bảng kê doanh thu tháng 9</button>')+'</div>';
+    return h;
+  }
+  const nd=nDays();
+  h+='<div class="kpis">'+
+    kpi(money(t.rev),'đ','Doanh thu',nf(t.trips)+' chuyến'+(st.demo?' · số mẫu':''))+
+    kpi(t.trips?money(t.rev/t.trips):'—','đ','Doanh thu mỗi chuyến','')+
+    (t.vol>0?kpi(nf(t.vol),'lít','Sản lượng vận chuyển','Cước bình quân '+nf(t.rev/t.vol,1)+' đ/lít'):'')+
+    kpi(t.km?nf((t.rev||0)/t.km):'—','đ','Doanh thu mỗi km','Trên tổng km GPS')+
+    kpi(t.act?money((t.rev||0)/t.act):'—','đ','Doanh thu mỗi ngày chạy','Trên '+t.act+' ngày-xe chạy')+
+    (isFull()&&t.cost>0?kpi(money((t.rev||0)-t.cost),'đ','Doanh thu trừ chi phí','Chi phí cả tháng chiếm '+pct(t.cost,t.rev,1)+' doanh thu'):kpi('Chưa có','','Doanh thu trừ chi phí',t.cost>0?'Chỉ tính khi chọn cả tháng 9':'Nhập chi phí ở tab Chi phí',1))+
+  '</div>';
+  h+='<div class="g2"><div class="panel"><h3>Doanh thu theo ngày (triệu đồng)</h3><div class="chart"><canvas id="ch-rday"></canvas></div></div>'+
+     '<div class="panel"><h3>Doanh thu mỗi km theo xe (nghìn đồng)</h3><div class="chart"><canvas id="ch-rpk"></canvas></div></div></div>';
+  h+=custBlock(RV);
+  h+='<h2>Chi tiết theo xe</h2><div class="panel"><div class="scroll"><table class="tbl"><thead><tr><th>Xe</th><th class="n">Chuyến</th><th class="n">Doanh thu (đ)</th><th class="n">Doanh thu/chuyến (đ)</th><th class="n">Doanh thu/km (đ)</th><th class="n">Doanh thu/ngày chạy (đ)</th><th class="n">Chi phí cả tháng (đ)</th><th class="n">Doanh thu − chi phí (đ)</th></tr></thead><tbody>'+
+   vs.map(o=>'<tr><td>'+xeTag(o.x)+'</td><td class="n">'+o.trips+'</td><td class="n">'+vnd(o.rev)+'</td><td class="n">'+(o.trips?nf(o.rev/o.trips):'—')+'</td><td class="n">'+(o.rev!=null&&o.km?nf(o.rev/o.km):'—')+'</td><td class="n">'+(o.rev!=null&&o.act?nf(o.rev/o.act):'—')+'</td><td class="n">'+(o.cost>0?vnd(Math.round(o.cost)):'—')+'</td><td class="n">'+(isFull()&&o.rev!=null&&o.cost>0?vnd(Math.round(o.rev-o.cost)):'—')+'</td></tr>').join('')+'</tbody></table></div></div>';
+  const list=RV.filter(r=>st.sel.has(r.x)&&inRange(r.d)).sort((a,b)=>a.d-b.d||a.x.localeCompare(b.x));
+  h+='<h2>Chi tiết từng dòng bảng kê'+(list.length>150?' (150 dòng đầu)':'')+'</h2><div class="panel"><div class="scroll" style="max-height:380px"><table class="tbl"><thead><tr><th>Ngày</th><th>Xe</th><th>Khách hàng</th><th>Tuyến / mã chuyến</th><th>Tài xế</th><th class="n">Chuyến</th><th class="n">Doanh thu (đ)</th><th class="n">Khối lượng (lít)</th></tr></thead><tbody>'+
+   list.slice(0,150).map(r=>'<tr><td>'+r.d+'</td><td>'+xeTag(r.x)+'</td><td>'+esc(r.cust||'')+'</td><td>'+esc(r.route)+'</td><td>'+esc(r.dr||'')+'</td><td class="n">'+tn(r)+'</td><td class="n">'+vnd(r.amt)+'</td><td class="n">'+(r.vol?nf(r.vol):'—')+'</td></tr>').join('')+'</tbody></table></div></div>';
+  h+='<div style="margin-top:16px">'+importBox('rev','Nhập thêm hoặc thay số liệu doanh thu','Ngày, Biển số, Tuyến hoặc mã chuyến, Doanh thu (đồng), Khối lượng lít (tùy chọn), Tài xế (tùy chọn), Km một lượt giao (tùy chọn), Khách hàng (tùy chọn)','05/09/2026 &nbsp; 65H-029.54 &nbsp; Nhà Bè – Vĩnh Long &nbsp; 12.500.000 &nbsp; 24.000','','<button class="btn ghost" data-act="restorerev">Khôi phục bảng kê doanh thu tháng 9</button>')+'</div>';
+  return h;
+}
+function custBlock(RV){
+  const L=RV.filter(r=>st.sel.has(r.x)&&inRange(r.d)); const by={};
+  L.forEach(r=>{ const k=r.cust||'Chưa ghi khách hàng'; const o=by[k]||(by[k]={k:k,n:0,vol:0,amt:0}); o.n+=tn(r); o.vol+=r.vol||0; o.amt+=r.amt; });
+  const a=Object.values(by).sort((p,q)=>q.amt-p.amt); if(!a.length||(a.length===1&&a[0].k==='Chưa ghi khách hàng')) return '';
+  const T=sum(a,'amt');
+  return '<h2>Doanh thu theo khách hàng</h2><div class="g2"><div class="panel"><div class="chart"><canvas id="ch-cust"></canvas></div></div><div class="panel"><div class="scroll"><table class="tbl"><thead><tr><th>Khách hàng</th><th class="n">Chuyến</th><th class="n">Sản lượng (lít)</th><th class="n">Doanh thu (đ)</th><th class="n">Tỷ trọng</th><th class="n">Cước/lít (đ)</th></tr></thead><tbody>'+
+   a.map(o=>'<tr><td>'+esc(o.k)+'</td><td class="n">'+o.n+'</td><td class="n">'+(o.vol?nf(o.vol):'—')+'</td><td class="n">'+vnd(o.amt)+'</td><td class="n">'+pct(o.amt,T)+'</td><td class="n">'+(o.vol?nf(o.amt/o.vol,1):'—')+'</td></tr>').join('')+'</tbody></table></div></div></div>';
+}
+function cRev(){
+  const vs=V(), RV=getRev(); if(!vs.length||!RV.length) return; const days=dayList();
+  mk('ch-rday',{type:'bar',data:{labels:days,datasets:vs.map(o=>({label:o.x,backgroundColor:col(o.x),data:days.map(d=>+(sum(RV.filter(r=>r.x===o.x&&r.d===d),'amt')/1e6).toFixed(2))}))},
+    options:opts({scales:{x:{stacked:true,title:axisTitle('Ngày trong tháng 9')},y:{stacked:true,title:axisTitle('triệu đồng')}},plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+nf(c.parsed.y,1)+' tr'}}}})});
+  { const by={}; RV.filter(r=>st.sel.has(r.x)&&inRange(r.d)).forEach(r=>{ const k=r.cust||'Chưa ghi khách hàng'; by[k]=(by[k]||0)+r.amt; }); const ks=Object.keys(by).sort((p,q)=>by[q]-by[p]);
+    mk('ch-cust',{type:'bar',data:{labels:ks,datasets:[{label:'Doanh thu',backgroundColor:css('--accent'),borderRadius:4,data:ks.map(k=>+(by[k]/1e6).toFixed(2))}]},options:opts({indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>nf(c.parsed.x,1)+' tr'}}},scales:{x:{beginAtZero:true,title:axisTitle('triệu đồng')}}})}); }
+  const w=vs.filter(o=>o.rev!=null&&o.km>0);
+  mk('ch-rpk',{type:'bar',data:{labels:w.map(o=>o.x),datasets:[{label:'Doanh thu/km',backgroundColor:w.map(o=>col(o.x)),borderRadius:4,data:w.map(o=>+(o.rev/o.km/1000).toFixed(1))}]},options:opts({plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:axisTitle('nghìn đồng / km')}}})});
+}
+
+/* ---------- Tab: Dữ liệu ---------- */
+function vData(){
+  const rs=R().slice().sort((a,b)=>XE.indexOf(a.x)-XE.indexOf(b.x)||a.d-b.d);
+  let h='<div class="panel"><h3>Cách tính các chỉ số</h3><ul class="note" style="margin:0;padding-left:20px;line-height:1.7">'+
+   '<li><b>Ngày chạy</b>: ngày xe chạy từ ngưỡng km đặt ở bộ lọc (mặc định 5 km), để loại các ngày chỉ nhích xe hoặc nhiễu GPS.</li>'+
+   '<li><b>Dừng nổ máy</b>: thời gian xe đứng yên nhưng máy vẫn nổ (cột T.G Dừng Mở Máy). <b>Di chuyển</b> = T.G Sử Dụng − Dừng nổ máy.</li>'+
+   '<li><b>Dừng tắt máy giữa ca</b>: (Lần tắt máy cuối − Lần mở máy đầu) − T.G Sử Dụng. Đây là thời gian nghỉ trong ca có tắt máy (ăn trưa, nghỉ, chờ…), chưa tách theo lý do.</li>'+
+   '<li><b>L/100km</b>: lít tiêu thụ ÷ km GPS của đúng các ngày có số liệu × 100.</li>'+
+   '<li><b>Doanh thu/km</b>: tổng doanh thu các chuyến ÷ tổng km GPS trong khoảng ngày đã chọn.</li>'+
+   '<li>Cột nhiên liệu theo định mức của thiết bị GPS đều bằng 0 nên chưa dùng được; số nhiên liệu lấy từ bảng bạn nhập.</li>'+
+   '<li><b>Chi phí</b>: lấy từ bảng chi phí tháng 9 theo từng dòng tài xế và biển số. Hạng mục chỉ có số tổng (phí VETC) được chia cho các xe có GPS theo tỷ lệ km vận hành cả tháng.</li>'+
+   '<li><b>Tài xế</b>: mỗi ngày của mỗi xe được gắn với tài xế theo bảng phân công (từ ngày, đến ngày). Ngày chưa có phân công được gộp ở dòng "Chưa chia ngày".</li>'+
+   '<li><b>Doanh thu</b>: lấy từ bảng kê cước vận tải SWE tháng 9. Sheet T 09: mỗi dòng là một chuyến. Sheet SFT Vĩnh Long (xe 65H-029.54): mỗi dòng là một điểm giao nhỏ, tổng lít mỗi ngày đều là bội của 6.000 lít nên mỗi 6.000 lít tính là 1 chuyến. Sà lan lấy từ biên bản đối chiếu cước, tính trước thuế GTGT 8%, mỗi ngày vận chuyển là 1 chuyến. thành tiền = đơn giá cước (đ/lít) × tổng lít (xăng A95 + dầu DO). Tài xế trong bảng kê được ghép với tên ngắn trong bảng chi phí.</li>'+
+   '<li><b>Thu nhập tài xế tạm tính</b>: lương cố định mỗi người cộng thu nhập theo chuyến (mức theo km một lượt giao, không tính chiều về bãi). Chuyến và km một lượt được ước tính từ GPS cho đến khi có danh sách chuyến thực tế. Khoản này được cộng vào chi phí vận hành.</li>'+
+   '<li><b>Tàu / sà lan</b>: không có GPS đường bộ nên không có km; theo dõi theo chuyến, khối lượng, giờ hoạt động và doanh thu nhập tay.</li></ul></div>';
+  h+='<h2>Dữ liệu theo ngày ('+rs.length+' dòng)</h2><div class="panel"><div class="scroll" style="max-height:560px"><table class="tbl"><thead><tr><th>Xe</th><th>Ngày</th><th class="n">Km</th><th>Mở máy đầu</th><th>Tắt máy cuối</th><th class="n">Nổ máy</th><th class="n">Dừng nổ máy</th><th class="n">Dừng tắt máy giữa ca</th><th class="n">Lần dừng</th><th class="n">V tối đa</th><th class="n">V TB</th><th class="n">Vượt tốc</th><th>Điểm đầu</th><th>Điểm cuối</th></tr></thead><tbody>'+
+   rs.map(r=>'<tr><td>'+xeTag(r.x)+'</td><td>'+r.d+' ('+r.w+')</td><td class="n">'+nf(r.km,2)+'</td><td>'+(r.a?r.a.slice(0,5):'—')+'</td><td>'+(r.b?r.b.slice(0,5):'—')+'</td><td class="n">'+hm(r.use)+'</td><td class="n">'+hm(r.idle)+'</td><td class="n">'+hm(r.offs)+'</td><td class="n">'+r.st+'</td><td class="n">'+r.vm+'</td><td class="n">'+r.va+'</td><td class="n">'+r.ov+'</td><td>'+esc(r.p0)+'</td><td>'+esc(r.p1)+'</td></tr>').join('')+'</tbody></table></div></div>';
+  return h;
+}
+
+/* ---------- Phương tiện, chi phí, tài xế, tàu ---------- */
+const normP=s=>String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+const PLATE_RE=/(\d{2}[A-Z]\s*-?\s*\d{3}\s*[.\-]?\s*\d{2}|[A-Z]{2}\s*-?\s*\d{3}\s*[.\-]?\s*\d{2})/i;
+function plateFmt(s){ const n=normP(s); const m=n.match(/^(\d{2}[A-Z]|[A-Z]{2})(\d{3})(\d{2})$/); return m?m[1]+'-'+m[2]+'.'+m[3]:String(s||'').toUpperCase().trim(); }
+const ASSETS=()=>XE.map(x=>({x:x,t:'xe',gps:1})).concat(BASE_NONGPS.map(a=>Object.assign({gps:0},a)),st.extra.map(a=>Object.assign({gps:0},a)));
+const assetOf=x=>ASSETS().find(a=>a.x===x)||null;
+function matchAsset(s){ const n=normP(s); if(!n) return null; const a=ASSETS().find(q=>normP(q.x)===n); return a?a.x:null; }
+const visible=a=>!a.gps||st.sel.has(a.x);
+const isFull=()=>st.from===1&&st.to===MAXD;
+const msgHtml=k=>st.msg[k]?'<div class="msg '+(st.msg[k].ok?'ok':'err')+'">'+st.msg[k].t+'</div>':'';
+function assetTag(o){ return xeTag(o.x)+(o.t==='tau'?'<span class="tag">tàu</span>':(o.gps?'':'<span class="tag">chưa có GPS</span>')); }
+
+let _rdKey=null,_rdMap={};
+function rdMap(){ if(_rdKey!==st.rev){ _rdMap={}; st.rev.forEach(r=>{ if(r.dr){ const k=r.x+'|'+r.d; if(!_rdMap[k]) _rdMap[k]=r.dr; } }); _rdKey=st.rev; } return _rdMap; }
+function drvOf(x,d){
+  const rd=rdMap()[x+'|'+d]; if(rd) return {name:rd,known:true};
+  const cov=st.assign.filter(a=>a.x===x&&a.from!=null&&d>=a.from&&d<=a.to).sort((a,b)=>b.from-a.from);
+  return cov.length?{name:cov[0].dr,known:true}:{name:'',known:false};
+}
+const drvLabel=(x,d)=>{ const q=drvOf(x,d); return q.known?q.name:'Chưa chia ngày · '+x; };
+
+function kmAllMap(){ const m={}; DATA.forEach(r=>{ m[r.x]=(m[r.x]||0)+r.km; }); return m; }
+function costModel(){
+  const km=kmAllMap(); const base=sum(Object.values(km),v=>v);
+  const rows=ASSETS().map(a=>{
+    const o={x:a.x,t:a.t,gps:a.gps,n:a.n||'',km:km[a.x]||0,direct:{},alloc:{},drivers:[],rev:0,trips:0};
+    CATS.forEach(c=>{ o.direct[c[0]]=0; o.alloc[c[0]]=0; }); o.direct.tx=0; o.alloc.tx=0;
+    return o;
+  });
+  const byX={}; rows.forEach(o=>{ byX[o.x]=o; });
+  st.cost.forEach(c=>{ const o=byX[c.x]; if(!o) return; CATS.forEach(k=>{ o.direct[k[0]]+=(c.v&&c.v[k[0]])||0; }); if(c.dr&&!o.drivers.includes(c.dr)) o.drivers.push(c.dr); });
+  st.assign.forEach(a=>{ const o=byX[a.x]; if(o&&a.dr&&!o.drivers.includes(a.dr)) o.drivers.push(a.dr); });
+  const unalloc={};
+  CATS.forEach(c=>{ const p=st.pool[c[0]]||0; if(p>0){ if(base>0) rows.forEach(o=>{ o.alloc[c[0]]=p*o.km/base; }); else unalloc[c[0]]=p; } });
+  getRev().forEach(r=>{ const o=byX[r.x]; if(o){ o.rev+=r.amt; o.trips+=tn(r); } });
+  st.tau.forEach(r=>{ const o=byX[r.x]; if(o){ o.rev+=r.amt||0; o.trips+=tn(r); } });
+  const PM=payModel();
+  rows.forEach(o=>{ const q=PM.byX[o.x]; o.txBase=q?q.base:0; o.txTrip=q?q.trip:0; o.direct.tx=o.txBase+o.txTrip; });
+  rows.forEach(o=>{
+    o.allocSum=sum(CATS,c=>o.alloc[c[0]]);
+    o.total=sum(CATS_ALL,c=>o.direct[c[0]]+o.alloc[c[0]]);
+    o.cpk=o.km>0&&o.total>0?o.total/o.km:null;
+    o.profit=o.rev>0?o.rev-o.total:null;
+  });
+  return {rows:rows,byX:byX,base:base,unalloc:unalloc};
+}
+
+/* ---------- Thu nhập tài xế tạm tính ---------- */
+function payTier(km){ const L=st.pay.lim; if(km<L[0]) return 0; if(km<L[1]) return 1; if(km<=L[2]) return 2; return 3; }
+const payAmt=km=>st.pay.amt[payTier(km)];
+const tierLabel=i=>{ const L=st.pay.lim; return ['Dưới '+L[0]+' km',L[0]+' đến dưới '+L[1]+' km',L[1]+' đến '+L[2]+' km','Trên '+L[2]+' km'][i]; };
+function baseRegion(){
+  const cnt={}; DATA.forEach(r=>{ cnt[r.x]=cnt[r.x]||{}; cnt[r.x][r.r0]=(cnt[r.x][r.r0]||0)+1; });
+  const b={}; Object.keys(cnt).forEach(x=>{ b[x]=Object.keys(cnt[x]).sort((p,q)=>cnt[x][q]-cnt[x][p])[0]; });
+  return b;
+}
+function payModel(){
+  const P=st.pay, BR=baseRegion(), trips=[];
+  const realBy={}; st.rev.forEach(r=>{ const k=r.x+'|'+r.d; for(let i=0;i<tn(r);i++) (realBy[k]=realBy[k]||[]).push(r); });
+  const rowBy={}; DATA.forEach(r=>{ rowBy[r.x+'|'+r.d]=r; });
+  const mergedOut={}, carryKm={};
+  DATA.forEach(r=>{ const k=r.x+'|'+r.d, b=BR[r.x];
+    if(realBy[k]&&r.r0!==b&&r.r1===b){ const p=rowBy[r.x+'|'+(r.d-1)]; if(p&&p.r0===b&&p.r1!==b&&p.km>=P.minKm&&!realBy[p.x+'|'+p.d]){ mergedOut[p.x+'|'+p.d]=true; carryKm[k]=p.km; } } });
+  DATA.forEach(r=>{
+    const real=realBy[r.x+'|'+r.d];
+    if(r.km<P.minKm&&!real) return;
+    const b=BR[r.x]; let kind,est;
+    if(r.r0===b&&r.r1===b){ kind='Đi giao và về bãi trong ngày, lấy một nửa km'; est=r.km/2; }
+    else if(r.r0===b){ kind='Đi giao, cuối ngày còn ở ngoài, lấy toàn bộ km'; est=r.km; }
+    else if(r.r1===b){ kind='Chiều về bãi, không tính'; est=0; }
+    else { kind='Chạy giữa các điểm ngoài bãi, lấy toàn bộ km'; est=r.km; }
+    const base={x:r.x,d:r.d,r0:r.r0,r1:r.r1,kmDay:r.km,kind:kind};
+    if(mergedOut[r.x+'|'+r.d]){ trips.push(Object.assign({},base,{km1:0,pay:0,dr:'',skip:true,kind:'Chiều đi xa, tính chung với chuyến có doanh thu ngày hôm sau',src:'Ước tính từ GPS'})); return; }
+    if(real){
+      const ck=carryKm[r.x+'|'+r.d]; if(ck) base.kind='Chuyến đi xa: km một lượt lấy theo chiều đi ngày hôm trước';
+      const n=real.length, e=ck?ck/n:(est>0?est/n:r.km/2/n);
+      real.forEach(t=>{ const km1=t.km1>0?t.km1:e; trips.push(Object.assign({},base,{km1:km1,pay:payAmt(km1),dr:t.dr||'',src:t.km1>0?'Km thực tế đã nhập':'Có doanh thu, km ước tính'})); });
+    } else if(est>0){
+      trips.push(Object.assign({},base,{km1:est,pay:payAmt(est),dr:'',src:'Ước tính từ GPS'}));
+    } else {
+      trips.push(Object.assign({},base,{km1:0,pay:0,dr:'',skip:true,src:'Ước tính từ GPS'}));
+    }
+  });
+  const drivers={};
+  const ensure=n=>drivers[n]||(drivers[n]={name:n,xs:[],base:0,n:0,tripPay:0,tier:[0,0,0,0],unres:n.indexOf('Chưa chia ngày')===0});
+  const link=(o,x)=>{ if(x&&!o.xs.includes(x)) o.xs.push(x); };
+  st.cost.forEach(c=>{ if(!c.dr) return; const a=assetOf(c.x); if(a&&a.t==='tau') return; link(ensure(c.dr),c.x); });
+  st.assign.forEach(a=>{ if(a.dr) link(ensure(a.dr),a.x); });
+  trips.forEach(t=>{
+    const q=drvOf(t.x,t.d); t.who=t.dr||(q.known?q.name:'Chưa chia ngày · '+t.x);
+    if(t.skip) return;
+    const o=ensure(t.who); link(o,t.x); o.n++; o.tripPay+=t.pay; o.tier[payTier(t.km1)]++;
+  });
+  Object.values(drivers).forEach(o=>{ if(!o.unres) o.base=P.base; o.total=o.base+o.tripPay; });
+  const byX={}; const add=(x,v,k)=>{ byX[x]=byX[x]||{base:0,trip:0}; byX[x][k]+=v; };
+  trips.forEach(t=>{ if(!t.skip) add(t.x,t.pay,'trip'); });
+  const kmDx={}; DATA.forEach(r=>{ const q=drvOf(r.x,r.d); if(q.known){ kmDx[q.name]=kmDx[q.name]||{}; kmDx[q.name][r.x]=(kmDx[q.name][r.x]||0)+r.km; } });
+  Object.values(drivers).forEach(o=>{
+    if(o.unres||!o.base||!o.xs.length) return;
+    const w=o.xs.map(x=>(kmDx[o.name]&&kmDx[o.name][x])||0), sw=sum(w,v=>v);
+    o.xs.forEach((x,i)=>add(x,sw>0?o.base*w[i]/sw:o.base/o.xs.length,'base'));
+  });
+  return {drivers:Object.values(drivers),trips:trips,byX:byX,BR:BR};
+}
+
+/* ---------- Tab: Thu nhập tài xế ---------- */
+function vInc(){
+  const PM=payModel(); const P=st.pay;
+  const ds=PM.drivers.slice().sort((a,b)=>(a.unres-b.unres)||b.total-a.total);
+  const named=ds.filter(o=>!o.unres);
+  const baseT=sum(ds,'base'), tripT=sum(ds,'tripPay'), nT=sum(ds,'n'), grand=baseT+tripT;
+  const realN=PM.trips.filter(t=>!t.skip&&t.src!=='Ước tính từ GPS').length, kmReal=PM.trips.filter(t=>!t.skip&&t.src==='Km thực tế đã nhập').length;
+  let h='<p class="sub">Thu nhập tạm tính tháng 9 = lương cố định + thu nhập theo chuyến. Km mỗi chuyến chỉ tính một lượt đi giao, không tính đoạn xe chạy về kho nhận hoặc bãi xe. Số liệu cả tháng 9, không đổi theo bộ lọc ngày.</p>';
+  h+='<div class="banner"><span>Đây là số tạm tính. Số chuyến lấy theo bảng kê doanh thu ('+realN+'/'+nT+' chuyến); những ngày không có trong bảng kê được ước tính 1 chuyến từ GPS. Km một lượt giao thực tế mới có cho '+kmReal+'/'+nT+' chuyến, còn lại là ước tính từ GPS.</span></div>';
+  h+='<div class="kpis">'+
+    kpi(money(grand),'đ','Tổng thu nhập tài xế tạm tính',named.length+' tài xế')+
+    kpi(money(baseT),'đ','Lương cố định',named.length+' người × '+nf(P.base/1e6,1)+' tr')+
+    kpi(money(tripT),'đ','Thu nhập theo chuyến',nf(nT)+' chuyến tính lương')+
+    kpi(named.length?money(grand/named.length):'—','đ','Thu nhập trung bình mỗi tài xế','Gồm cả tài xế chưa có dữ liệu GPS')+
+  '</div>';
+  h+='<div class="panel"><h3>Thu nhập từng tài xế</h3><div class="chart"><canvas id="ch-inc"></canvas></div></div>';
+  h+='<h2>Bảng thu nhập tạm tính tháng 9</h2><div class="panel"><div class="scroll"><table class="tbl"><thead><tr><th>Tài xế</th><th>Phương tiện</th><th class="n">Số chuyến</th>'+[0,1,2,3].map(i=>'<th class="n">'+tierLabel(i)+'<br><span class="dim" style="font-weight:400">'+nf(P.amt[i])+' đ/chuyến</span></th>').join('')+'<th class="n">Lương cố định (đ)</th><th class="n">Theo chuyến (đ)</th><th class="n">Tổng thu nhập (đ)</th></tr></thead><tbody>'+
+    ds.map(o=>'<tr'+(o.unres?' class="dim"':'')+'><td>'+esc(o.name)+(!o.unres&&!o.n?'<span class="tag">chưa có dữ liệu chuyến</span>':'')+(o.unres?'<span class="tag">chưa biết tài xế</span>':'')+'</td><td>'+o.xs.map(esc).join(', ')+'</td><td class="n">'+(o.n||'—')+'</td>'+o.tier.map(v=>'<td class="n">'+(v||'—')+'</td>').join('')+'<td class="n">'+(o.base?vnd(o.base):'—')+'</td><td class="n">'+(o.tripPay?vnd(o.tripPay):'—')+'</td><td class="n"><b>'+vnd(o.total)+'</b></td></tr>').join('')+
+    '</tbody><tfoot><tr><td>Tổng</td><td></td><td class="n">'+nf(nT)+'</td>'+[0,1,2,3].map(i=>'<td class="n">'+sum(ds,o=>o.tier[i])+'</td>').join('')+'<td class="n">'+vnd(baseT)+'</td><td class="n">'+vnd(tripT)+'</td><td class="n">'+vnd(grand)+'</td></tr></tfoot></table></div>'+
+    '<p class="note" style="margin:10px 0 0">Khoản này đã được cộng vào cột "Thu nhập tài xế (tạm tính)" trong tab Chi phí. Dòng "Chưa chia ngày" là thu nhập theo chuyến của những ngày chưa biết ai lái; lương cố định của từng người đã tính ở dòng tên người đó.</p></div>';
+  h+='<h2>Quy tắc tính thu nhập</h2><div class="g2"><div class="panel"><h3>Mức thu nhập (sửa được)</h3><div style="display:grid;gap:8px">'+
+    '<label class="f-inline" style="justify-content:space-between"><span>Lương cố định mỗi người mỗi tháng (đ)</span><input type="text" inputmode="numeric" data-pay="base" value="'+nf(P.base)+'" style="width:130px;text-align:right"></label>'+
+    [0,1,2,3].map(i=>'<label class="f-inline" style="justify-content:space-between"><span>'+tierLabel(i)+', đ/chuyến</span><input type="text" inputmode="numeric" data-pay="amt'+i+'" value="'+nf(P.amt[i])+'" style="width:130px;text-align:right"></label>').join('')+
+    '<label class="f-inline" style="justify-content:space-between"><span>Ranh giới các mức (km)</span><span class="f-inline">'+[0,1,2].map(i=>'<input type="text" inputmode="numeric" data-pay="lim'+i+'" value="'+P.lim[i]+'" style="width:64px;text-align:right">').join('')+'</span></label>'+
+    '<label class="f-inline" style="justify-content:space-between"><span>Ngày chạy dưới số km này không tính chuyến</span><input type="text" inputmode="numeric" data-pay="minKm" value="'+P.minKm+'" style="width:64px;text-align:right"></label>'+
+    '</div><div class="row" style="display:flex;gap:8px;margin-top:10px"><button class="btn ghost" data-act="payreset">Khôi phục mức ban đầu</button></div>'+
+    '<p class="note" style="margin:8px 0 0">Đúng ranh giới: 100 km tính mức 100 đến 200; 200 km tính mức 200 đến 300; đúng 300 km vẫn thuộc mức 200 đến 300.</p></div>'+
+    '<div class="panel"><h3>Cách ước tính chuyến từ GPS</h3><ul class="note" style="margin:0;padding-left:20px;line-height:1.7">'+
+    '<li>Bãi xe của từng xe là nơi xe thường bắt đầu ngày: '+Object.keys(PM.BR).map(x=>esc(x)+': '+esc(PM.BR[x])).join('; ')+'.</li>'+
+    '<li>Ngày xe đi từ bãi và cuối ngày về lại bãi: tính 1 chuyến, km một lượt bằng một nửa km trong ngày.</li>'+
+    '<li>Ngày xe đi từ bãi nhưng cuối ngày còn ở ngoài (ví dụ Đồng Nai, Lâm Đồng): tính 1 chuyến, km một lượt bằng toàn bộ km ngày đó.</li>'+
+    '<li>Ngày xe từ ngoài chạy về bãi: là chiều về, không tính chuyến.</li>'+
+    '<li>Ngày có trong bảng kê doanh thu: số chuyến lấy theo bảng kê, km một lượt chia đều cho các chuyến trong ngày. Ngày không có trong bảng kê: ước tính 1 chuyến.</li>'+
+    '<li>Nhập doanh thu từng chuyến kèm cột "Km một lượt giao" (cột thứ 7) ở tab Doanh thu để thay số ước tính bằng số thực tế.</li></ul></div></div>';
+  const tl=PM.trips.slice().sort((a,b)=>a.d-b.d||a.x.localeCompare(b.x));
+  h+='<h2>Chi tiết từng chuyến tính lương'+(tl.length>200?' (200 dòng đầu)':'')+'</h2><div class="panel"><div class="scroll" style="max-height:420px"><table class="tbl"><thead><tr><th>Ngày</th><th>Xe</th><th>Tài xế</th><th>Điểm đầu → cuối ngày</th><th class="n">Km cả ngày</th><th class="n">Km một lượt</th><th class="n">Thu nhập chuyến (đ)</th><th>Cách tính</th><th>Nguồn</th></tr></thead><tbody>'+
+    tl.slice(0,200).map(t=>'<tr'+(t.skip?' class="dim"':'')+'><td>'+t.d+'</td><td>'+xeTag(t.x)+'</td><td>'+esc(t.who)+'</td><td>'+esc(t.r0)+' → '+esc(t.r1)+'</td><td class="n">'+nf(t.kmDay,1)+'</td><td class="n">'+(t.skip?'—':nf(t.km1,1))+'</td><td class="n">'+(t.skip?'0':vnd(t.pay))+'</td><td>'+esc(t.kind)+'</td><td>'+esc(t.src)+'</td></tr>').join('')+'</tbody></table></div></div>';
+  return h;
+}
+function cInc(){
+  const ds=payModel().drivers.filter(o=>o.total>0).sort((a,b)=>(a.unres-b.unres)||b.total-a.total); if(!ds.length) return;
+  mk('ch-inc',{type:'bar',data:{labels:ds.map(o=>o.name),datasets:[{label:'Lương cố định',backgroundColor:css('--accent'),data:ds.map(o=>+(o.base/1e6).toFixed(2))},{label:'Theo chuyến',backgroundColor:'#E64980',data:ds.map(o=>+(o.tripPay/1e6).toFixed(2))}]},
+    options:opts({scales:{x:{stacked:true},y:{stacked:true,title:axisTitle('triệu đồng')}},plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+nf(c.parsed.y,2)+' tr'}}}})});
+}
+
+/* tài xế */
+function drvAgg(){
+  const map={}; const CM=costModel();
+  const get=k=>map[k]||(map[k]={name:k,xs:[],km:0,act:0,use:0,idle:0,stops:0,over:0,days:0,direct:0,alloc:0,inc:0,nTrips:0,kmM:0,rev:0,trips:0,unres:k.indexOf('Chưa chia ngày')===0});
+  const addX=(o,x)=>{ if(x&&!o.xs.includes(x)) o.xs.push(x); };
+  R().forEach(r=>{ const o=get(drvLabel(r.x,r.d)); addX(o,r.x); o.days++; o.km+=r.km; o.use+=r.use; o.idle+=r.idle; o.stops+=r.st; o.over+=r.ov; if(isAct(r)) o.act++; });
+  let totKm=0; const kmM={};
+  DATA.forEach(r=>{ totKm+=r.km; if(st.sel.has(r.x)){ const k=drvLabel(r.x,r.d); kmM[k]=(kmM[k]||0)+r.km; } });
+  Object.keys(kmM).forEach(k=>{ get(k).kmM=kmM[k]; });
+  st.cost.forEach(c=>{ if(!c.dr) return; const a=assetOf(c.x); if(a&&a.gps&&!st.sel.has(c.x)) return; const o=get(c.dr); addX(o,c.x); o.direct+=sum(CATS,k=>(c.v&&c.v[k[0]])||0); });
+  const P=sum(CATS,k=>st.pool[k[0]]||0);
+  if(P>0&&totKm>0) Object.keys(kmM).forEach(k=>{ map[k].alloc=P*kmM[k]/totKm; });
+  getRev().filter(r=>inRange(r.d)).forEach(r=>{ const a=assetOf(r.x); if(a&&a.gps&&!st.sel.has(r.x)) return; const o=get(r.dr||drvLabel(r.x,r.d)); addX(o,r.x); o.rev+=r.amt; o.trips+=tn(r); });
+  st.tau.filter(r=>inRange(r.d)).forEach(r=>{ const o=get(r.dr||drvLabel(r.x,r.d)); addX(o,r.x); o.rev+=r.amt||0; o.trips+=tn(r); });
+  const PMd={}; payModel().drivers.forEach(q=>{ PMd[q.name]=q; });
+  Object.keys(map).forEach(k=>{ const q=PMd[k]; map[k].inc=q?q.total:0; map[k].nTrips=q?q.n:0; });
+  return Object.values(map).map(o=>{ o.cost=o.direct+o.alloc+o.inc; o.cpk=o.kmM>0&&o.cost>0?o.cost/o.kmM:null; return o; });
+}
+
+/* ---------- Tab: Chi phí ---------- */
+function vCost(){
+  const M=costModel(); const rows=M.rows.filter(visible);
+  const tot={}; CATS_ALL.forEach(c=>{ tot[c[0]]=sum(rows,o=>o.direct[c[0]]+o.alloc[c[0]]); });
+  const grand=sum(rows,'total'), allocT=sum(rows,'allocSum'), revT=sum(rows,'rev');
+  const g=rows.filter(o=>o.gps); const gC=sum(g,'total'), gK=sum(g,'km');
+  let h='<p class="sub">Chi phí tính cả tháng 9, không đổi theo bộ lọc ngày. Bộ lọc xe chỉ áp dụng cho xe có GPS; xe và tàu chưa có GPS luôn được hiển thị.</p>';
+  if(Object.keys(M.unalloc).length) h+='<div class="banner">Có số tổng cần chia theo km nhưng chưa có dữ liệu km vận hành nên chưa chia được.</div>';
+  const poolTxt=CATS.filter(c=>(st.pool[c[0]]||0)>0).map(c=>c[1]+' '+money(st.pool[c[0]])).join(', ');
+  h+='<div class="kpis">'+
+    kpi(money(grand),'đ','Tổng chi phí','Cả tháng 9 · '+rows.filter(o=>o.total>0).length+' phương tiện có chi phí')+
+    kpi(gK?nf(gC/gK):'—','đ/km','Chi phí mỗi km (xe có GPS)',nf(gK)+' km · '+money(gC)+' đ')+
+    kpi(pct(tot.nl,grand),'','Nhiên liệu trong tổng chi phí',money(tot.nl)+' đ')+
+    kpi(money(tot.tx),'đ','Thu nhập tài xế (tạm tính)',pct(tot.tx,grand)+' tổng chi phí · xem tab Thu nhập tài xế')+
+    kpi(money(allocT),'đ','Chi phí chia theo km',poolTxt||'Không có khoản nào cần chia',allocT>0?0:1)+
+    (revT>0?kpi(money(revT-grand),'đ','Doanh thu trừ chi phí','Doanh thu '+money(revT)+' đ'+(st.demo?' (số mẫu)':'')):kpi('Chưa có','','Doanh thu trừ chi phí','Nhập doanh thu ở tab Doanh thu',1))+
+  '</div>';
+  h+='<div class="g2"><div class="panel"><h3>Chi phí theo phương tiện (triệu đồng)</h3><div class="chart tall"><canvas id="ch-costx"></canvas></div></div>'+
+     '<div class="panel"><h3>Cơ cấu chi phí toàn đội</h3><div class="chart tall"><canvas id="ch-costpie"></canvas></div></div></div>';
+  const showRev=revT>0;
+  h+='<h2>Chi phí theo phương tiện</h2><div class="panel"><div class="scroll"><table class="tbl"><thead><tr><th>Phương tiện</th><th>Tài xế</th><th class="n">Km vận hành</th>'+CATS_ALL.map(c=>'<th class="n">'+c[1]+'</th>').join('')+'<th class="n">Tổng (đ)</th><th class="n">Trong đó chia theo km (đ)</th><th class="n">Chi phí/km (đ)</th>'+(showRev?'<th class="n">Doanh thu (đ)</th><th class="n">Doanh thu − chi phí (đ)</th>':'')+'</tr></thead><tbody>'+
+    rows.map(o=>'<tr><td>'+assetTag(o)+'</td><td>'+(o.drivers.length?o.drivers.map(esc).join(', '):'<span class="dim">—</span>')+'</td><td class="n">'+(o.gps?nf(o.km):'<span class="dim">—</span>')+'</td>'+
+      CATS_ALL.map(c=>{ const v=o.direct[c[0]]+o.alloc[c[0]]; return '<td class="n">'+(v>0?vnd(Math.round(v)):'<span class="dim">—</span>')+'</td>'; }).join('')+
+      '<td class="n"><b>'+(o.total>0?vnd(Math.round(o.total)):'—')+'</b></td><td class="n">'+(o.allocSum>0?vnd(Math.round(o.allocSum)):'—')+'</td><td class="n">'+(o.cpk?nf(o.cpk):'—')+'</td>'+
+      (showRev?'<td class="n">'+(o.rev>0?vnd(o.rev):'—')+'</td><td class="n">'+(o.profit!=null?vnd(Math.round(o.profit)):'—')+'</td>':'')+'</tr>').join('')+
+    '</tbody><tfoot><tr><td>Tổng</td><td></td><td class="n">'+nf(gK)+'</td>'+CATS_ALL.map(c=>'<td class="n">'+vnd(Math.round(tot[c[0]]))+'</td>').join('')+'<td class="n">'+vnd(Math.round(grand))+'</td><td class="n">'+vnd(Math.round(allocT))+'</td><td class="n">'+(gK?nf(gC/gK):'—')+'</td>'+(showRev?'<td class="n">'+vnd(revT)+'</td><td class="n">'+vnd(Math.round(revT-grand))+'</td>':'')+'</tr></tfoot></table></div></div>';
+  const nongps=rows.filter(o=>!o.gps);
+  h+='<div class="panel" style="margin-top:16px"><h3>Cách tính và lưu ý</h3><ul class="note" style="margin:0;padding-left:20px;line-height:1.7">'+
+    CATS.filter(c=>(st.pool[c[0]]||0)>0).map(c=>'<li><b>'+c[1]+'</b>: chỉ có số tổng '+vnd(st.pool[c[0]])+' đ, chia cho '+M.rows.filter(o=>o.km>0).length+' xe có GPS theo tỷ lệ km vận hành trong tháng 9 (tổng '+nf(M.base)+' km). Xe và tàu chưa có GPS chưa được chia khoản này.</li>').join('')+
+    (nongps.length?'<li>Phương tiện chưa có dữ liệu GPS: '+nongps.map(o=>esc(o.x)+(o.t==='tau'?' (tàu)':'')).join(', ')+'. Hiện chỉ có chi phí trực tiếp, chưa tính được chi phí/km.</li>':'')+
+    (M.byX['SG-104.02']&&M.byX['SG-104.02'].total>0?'<li><b>Sà lan SG-104.02</b>: chi phí '+vnd(Math.round(M.byX['SG-104.02'].total))+' đ là số tạm tính theo tổng cả tháng, chưa có chi tiết từng hạng mục nên đang ghi ở Chi phí khác.</li>':'')+
+    '<li><b>Thu nhập tài xế (tạm tính)</b>: lương cố định '+nf(st.pay.base)+' đ/người/tháng cộng thu nhập theo chuyến tính từ km một lượt giao. Lương cố định của tài xế được gắn vào xe họ lái; số chuyến hiện ước tính từ GPS.</li>'+
+    '<li>Chi phí có tài xế gắn theo từng dòng, nên khi một xe đổi tài xế vẫn tách được chi phí theo người.</li></ul></div>';
+  h+='<h2>Cập nhật số liệu chi phí</h2><div class="g2">'+
+    importBox('cost','Dán bảng chi phí theo xe','Tài xế + biển số (ví dụ "Hữu Nhi 65H-029.54"), Phí vào kho, VETC, Cầu đường, Nhiên liệu, Bảo dưỡng sửa chữa, Chi phí khác','Hữu Nhi 65H-029.54 &nbsp; &nbsp; &nbsp; &nbsp; 12.380.000 &nbsp; &nbsp; 1.200.000','Dán cả bảng từ Excel, kể cả dòng Tổng. Nếu số ở dòng Tổng lớn hơn tổng các xe (như phí VETC), phần chênh được coi là số chưa có chi tiết từng xe và chia theo km. Biển số chưa có trong danh sách sẽ tự được thêm là phương tiện mới. Dán thay thế sẽ xóa số tổng chưa chia cũ nếu bảng mới không có dòng Tổng.','<button class="btn ghost" data-act="restore">Khôi phục số liệu tháng 9 đã nhập sẵn</button>')+
+    '<div style="display:grid;gap:16px;align-content:start"><div class="panel"><h3>Số tổng chưa có chi tiết từng xe</h3><p class="sub">Nhập tổng cả tháng cho hạng mục chỉ có số chung. Hệ thống chia theo tỷ lệ quãng đường vận hành (km GPS).</p><div style="display:grid;gap:8px">'+
+    CATS.map(c=>'<label class="f-inline" style="justify-content:space-between"><span>'+c[1]+'</span><input type="text" inputmode="numeric" data-pool="'+c[0]+'" value="'+((st.pool[c[0]]||0)?nf(st.pool[c[0]]):'')+'" placeholder="0" style="width:150px;text-align:right"></label>').join('')+'</div></div>'+addAssetPanel()+'</div></div>';
+  return h;
+}
+function addAssetPanel(){
+  return '<div class="panel"><h3>Thêm phương tiện mới</h3><p class="sub">Xe hoặc tàu chưa có trong danh sách. Biển số mới trong bảng chi phí cũng được tự thêm.</p><div class="f-inline" style="flex-wrap:wrap"><input id="addx" type="text" placeholder="vd. SG-105.01" style="width:150px"><select id="addt"><option value="xe">Xe bồn</option><option value="tau">Tàu / sà lan</option></select><button class="btn" data-act="addasset">Thêm</button></div>'+msgHtml('asset')+'</div>';
+}
+function cCost(){
+  const rows=costModel().rows.filter(visible).filter(o=>o.total>0); if(!rows.length) return;
+  mk('ch-costx',{type:'bar',data:{labels:rows.map(o=>o.x),datasets:CATS_ALL.map(c=>({label:c[1],backgroundColor:CAT_COL[c[0]],data:rows.map(o=>+((o.direct[c[0]]+o.alloc[c[0]])/1e6).toFixed(2))}))},
+    options:opts({indexAxis:'y',scales:{x:{stacked:true,title:axisTitle('triệu đồng')},y:{stacked:true}},plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+nf(c.parsed.x,1)+' tr'}}}})});
+  const tc=CATS_ALL.map(c=>sum(rows,o=>o.direct[c[0]]+o.alloc[c[0]]));
+  mk('ch-costpie',{type:'doughnut',data:{labels:CATS_ALL.map(c=>c[1]),datasets:[{data:tc.map(v=>+(v/1e6).toFixed(2)),backgroundColor:CATS_ALL.map(c=>CAT_COL[c[0]]),borderColor:css('--surface'),borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{color:css('--ink'),boxWidth:10,usePointStyle:true,font:{size:12}}},tooltip:{callbacks:{label:c=>c.label+': '+nf(c.parsed,1)+' tr'}}}}});
+}
+
+/* chi phí nhiên liệu từ bảng chi phí (dùng trong tab Nhiên liệu) */
+function fuelCostBlock(vs){
+  const M=costModel(); const rows=vs.map(o=>M.byX[o.x]).filter(o=>o&&o.direct.nl>0);
+  if(!rows.length) return '';
+  const tc=sum(rows,o=>o.direct.nl), tk=sum(rows,'km');
+  return '<h2>Chi phí nhiên liệu đã ghi nhận</h2><p class="sub">Lấy từ bảng chi phí tháng 9 (cả tháng, không đổi theo bộ lọc ngày). Chưa có số lít nên chưa tính được L/100km.</p>'+
+   '<div class="g2"><div class="panel"><div class="scroll"><table class="tbl"><thead><tr><th>Xe</th><th class="n">Chi phí nhiên liệu (đ)</th><th class="n">Km cả tháng</th><th class="n">Nhiên liệu/km (đ)</th><th class="n">% chi phí của xe</th></tr></thead><tbody>'+
+   rows.map(o=>'<tr><td>'+xeTag(o.x)+'</td><td class="n">'+vnd(o.direct.nl)+'</td><td class="n">'+nf(o.km)+'</td><td class="n">'+(o.km?nf(o.direct.nl/o.km):'—')+'</td><td class="n">'+pct(o.direct.nl,o.total)+'</td></tr>').join('')+
+   '</tbody><tfoot><tr><td>Tổng</td><td class="n">'+vnd(tc)+'</td><td class="n">'+nf(tk)+'</td><td class="n">'+(tk?nf(tc/tk):'—')+'</td><td></td></tr></tfoot></table></div></div>'+
+   '<div class="panel"><h3>Chi phí nhiên liệu mỗi km (nghìn đồng)</h3><div class="chart"><canvas id="ch-fcost"></canvas></div></div></div>';
+}
+function fuelCostChart(vs){
+  const M=costModel(); const rows=vs.map(o=>M.byX[o.x]).filter(o=>o&&o.direct.nl>0&&o.km>0);
+  if(!rows.length) return;
+  mk('ch-fcost',{type:'bar',data:{labels:rows.map(o=>o.x),datasets:[{label:'Nhiên liệu/km',backgroundColor:rows.map(o=>col(o.x)),borderRadius:4,data:rows.map(o=>+(o.direct.nl/o.km/1000).toFixed(2))}]},options:opts({plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:axisTitle('nghìn đồng / km')}}})});
+}
+
+/* ---------- Tab: Tài xế ---------- */
+function vDrv(){
+  const rows=drvAgg().sort((a,b)=>b.km-a.km||b.cost-a.cost);
+  const unres=st.assign.filter(a=>a.from==null);
+  const totKm=sum(rows,'km'), knownKm=sum(rows.filter(o=>!o.unres),'km');
+  const nd=rows.filter(o=>!o.unres).length;
+  let h='<p class="sub">Mỗi dòng là một tài xế. Quãng đường và giờ chạy lấy từ GPS theo phân công tài xế từng ngày (bộ lọc xe và ngày áp dụng). Chi phí là số cả tháng 9.</p>';
+  if(unres.length) h+='<div class="banner"><span>Chưa biết ngày lái của '+unres.map(a=>esc(a.dr)+' ('+esc(a.x)+')').join(', ')+'. Km của xe đó đang gộp ở dòng "Chưa chia ngày". Nhập phân công theo ngày ở cuối trang để chia cho từng người.</span></div>';
+  h+='<div class="kpis">'+
+    kpi(nf(nd),'','Tài xế có số liệu','Gồm cả tài xế chỉ có chi phí')+
+    kpi(pct(knownKm,totKm),'','Km đã gắn được tài xế',nf(knownKm)+'/'+nf(totKm)+' km')+
+    kpi(nf(rows.filter(o=>o.xs.length>1).length),'','Tài xế lái nhiều xe','Tự cập nhật khi nhập phân công theo ngày')+
+  '</div>';
+  h+='<div class="g2"><div class="panel"><h3>Quãng đường theo tài xế (km)</h3><div class="chart"><canvas id="ch-drvkm"></canvas></div></div>'+
+     '<div class="panel"><h3>Chi phí theo tài xế (triệu đồng)</h3><div class="chart"><canvas id="ch-drvcost"></canvas></div></div></div>';
+  h+='<h2>Chi tiết theo tài xế</h2><div class="panel"><div class="scroll"><table class="tbl"><thead><tr><th>Tài xế</th><th>Phương tiện</th><th class="n">Ngày chạy</th><th class="n">Km</th><th class="n">Giờ nổ máy</th><th class="n">% đứng yên</th><th class="n">Lần dừng</th><th class="n">Vượt tốc</th><th class="n">Chi phí trực tiếp (đ)</th><th class="n">Chia theo km (đ)</th><th class="n">Thu nhập tạm tính (đ)</th><th class="n">Tổng chi phí (đ)</th><th class="n">Chi phí/km (đ)</th><th class="n">Doanh thu (đ)</th><th class="n">Chuyến</th></tr></thead><tbody>'+
+    rows.map(o=>'<tr'+(o.unres?' class="dim"':'')+'><td>'+esc(o.name)+'</td><td>'+o.xs.map(esc).join(', ')+'</td><td class="n">'+o.act+'</td><td class="n">'+(o.km?nf(o.km):'—')+'</td><td class="n">'+(o.use?nf(hrs(o.use),1):'—')+'</td><td class="n">'+(o.use?pct(o.idle,o.use):'—')+'</td><td class="n">'+(o.days?o.stops:'—')+'</td><td class="n">'+(o.days?o.over:'—')+'</td><td class="n">'+(o.direct?vnd(o.direct):'—')+'</td><td class="n">'+(o.alloc>0?vnd(Math.round(o.alloc)):'—')+'</td><td class="n">'+(o.inc>0?vnd(Math.round(o.inc)):'—')+'</td><td class="n">'+(o.cost>0?vnd(Math.round(o.cost)):'—')+'</td><td class="n">'+(o.cpk?nf(o.cpk):'—')+'</td><td class="n">'+(o.rev>0?vnd(o.rev):'—')+'</td><td class="n">'+(o.trips||'—')+'</td></tr>').join('')+'</tbody></table></div>'+
+    '<p class="note" style="margin:10px 0 0">Khi một tài xế lái nhiều xe, hoặc một xe có nhiều tài xế theo từng khoảng ngày, bảng tự gộp theo tên tài xế. Doanh thu có thể ghi trực tiếp tên tài xế ở cột thứ 6 của bảng doanh thu; nếu bỏ trống, hệ thống lấy theo phân công của ngày đó.</p></div>';
+  h+='<h2>Phân công tài xế theo xe</h2><div class="g2"><div class="panel"><div class="scroll"><table class="tbl"><thead><tr><th>Phương tiện</th><th>Tài xế</th><th class="n">Từ ngày</th><th class="n">Đến ngày</th></tr></thead><tbody>'+
+    st.assign.slice().sort((a,b)=>a.x.localeCompare(b.x)||(a.from||0)-(b.from||0)).map(a=>'<tr><td>'+xeTag(a.x)+'</td><td>'+esc(a.dr)+'</td><td class="n">'+(a.from!=null?a.from:'<span class="dim">chưa rõ</span>')+'</td><td class="n">'+(a.to!=null?a.to:'<span class="dim">chưa rõ</span>')+'</td></tr>').join('')+'</tbody></table></div></div>'+
+    importBox('assign','Cập nhật phân công tài xế','Biển số, Tài xế, Từ ngày, Đến ngày','65H-029.94 &nbsp; Hiếu &nbsp; 1 &nbsp; 15','Mỗi dòng là một khoảng thời gian một tài xế lái một xe. Một xe có thể có nhiều dòng. Bỏ trống ngày nếu chưa biết. Dán sẽ thay phân công của các xe có trong bảng; xe khác giữ nguyên.')+'</div>';
+  return h;
+}
+function cDrv(){
+  const rows=drvAgg().sort((a,b)=>b.km-a.km||b.cost-a.cost);
+  const k=rows.filter(o=>o.km>0);
+  if(k.length) mk('ch-drvkm',{type:'bar',data:{labels:k.map(o=>o.name),datasets:[{label:'Km',backgroundColor:k.map(o=>o.unres?'#B8C4CE':css('--accent')),borderRadius:4,data:k.map(o=>Math.round(o.km))}]},options:opts({indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,title:axisTitle('km')}}})});
+  const c=rows.filter(o=>o.cost>0);
+  if(c.length) mk('ch-drvcost',{type:'bar',data:{labels:c.map(o=>o.name),datasets:[{label:'Trực tiếp',backgroundColor:css('--accent'),data:c.map(o=>+(o.direct/1e6).toFixed(2))},{label:'Chia theo km',backgroundColor:'#9B5CF6',data:c.map(o=>+(o.alloc/1e6).toFixed(2))},{label:'Thu nhập tạm tính',backgroundColor:'#E64980',data:c.map(o=>+(o.inc/1e6).toFixed(2))}]},options:opts({indexAxis:'y',scales:{x:{stacked:true,title:axisTitle('triệu đồng')},y:{stacked:true}}})});
+}
+
+/* ---------- Tab: Tàu / Sà lan ---------- */
+function vTau(){
+  const M=costModel(); const taus=M.rows.filter(o=>o.t==='tau'); const T=st.tau.filter(r=>inRange(r.d));
+  let h='<p class="sub">Tàu và sà lan không có GPS đường bộ nên không có km. Khi có số liệu, nhập từng chuyến để theo dõi chuyến, khối lượng, giờ hoạt động, nhiên liệu, doanh thu và chi phí. Chi phí là số cả tháng 9.</p>';
+  if(!taus.length){
+    return h+'<div class="g2"><div class="panel">'+emptyState('Chưa có tàu nào trong danh sách','Thêm tàu hoặc sà lan ở khung bên cạnh, hoặc dán bảng chi phí có dòng tàu (ví dụ "Sà lan SG-104.02").')+'</div>'+addAssetPanel()+'</div>';
+  }
+  const trips=sum(T,tn), vol=sum(T,'vol'), hh=sum(T,'hrs'), rev=sum(T,'amt'), lit=sum(T,'lit'); const cost=sum(taus,'total');
+  h+='<div class="kpis">'+
+    kpi(nf(taus.length),'','Số tàu / sà lan',taus.map(o=>esc(o.x)).join(', '))+
+    kpi(cost>0?money(cost):'0','đ','Chi phí cả tháng 9',cost>0?'':'Chưa ghi nhận chi phí')+
+    kpi(nf(trips),'chuyến','Số chuyến',trips?'':'Chưa có số liệu',trips?0:1)+
+    kpi(trips?nf(vol):'—','','Khối lượng vận chuyển',trips?'':'',trips?0:1)+
+    kpi(trips?nf(hh,1):'—','giờ','Giờ hoạt động','',trips?0:1)+
+    kpi(trips?money(rev):'—','đ','Doanh thu',trips&&isFull()&&cost>=0?'Trừ chi phí: '+money(rev-cost)+' đ':'',trips?0:1)+
+  '</div>';
+  if(T.some(r=>r.gross)) h+='<p class="note" style="margin:-6px 0 14px">Doanh thu tàu tính trước thuế GTGT 8%; tổng giá trị thanh toán theo biên bản là '+vnd(sum(T,'gross'))+' đ. Chi phí vận hành của tàu hiện là số tạm tính theo tổng, chưa chia theo hạng mục (đang ghi ở mục Chi phí khác).</p>';
+  if(!T.length) h+='<div class="panel" style="margin-bottom:16px">'+emptyState('Chưa có chuyến nào của tàu trong tháng 9','Tàu '+taus.map(o=>esc(o.x)).join(', ')+' đã được ghi nhận là phương tiện, với chi phí tháng 9 như bảng dưới. Khi có số liệu chuyến, dán vào khung nhập bên dưới để các chỉ số trên tự cập nhật.')+'</div>';
+  h+='<div class="panel"><div class="scroll"><table class="tbl"><thead><tr><th>Phương tiện</th><th>Thuyền trưởng / tài xế</th><th class="n">Chuyến</th><th class="n">Khối lượng</th><th class="n">Giờ hoạt động</th><th class="n">Nhiên liệu (lít)</th><th class="n">Doanh thu (đ)</th><th class="n">Chi phí tháng (đ)</th><th class="n">Doanh thu − chi phí (đ)</th><th class="n">Doanh thu/chuyến (đ)</th><th class="n">Chi phí/chuyến (đ)</th></tr></thead><tbody>'+
+    taus.map(o=>{ const q=T.filter(r=>r.x===o.x); const n=sum(q,tn), rv=sum(q,'amt'); const drs=[]; q.forEach(r=>{ if(r.dr&&!drs.includes(r.dr)) drs.push(r.dr); }); o.drivers.forEach(d=>{ if(!drs.includes(d)) drs.push(d); });
+      return '<tr><td>'+assetTag(o)+'</td><td>'+(drs.length?drs.map(esc).join(', '):'<span class="dim">—</span>')+'</td><td class="n">'+(n||'—')+'</td><td class="n">'+(n?nf(sum(q,'vol')):'—')+'</td><td class="n">'+(n?nf(sum(q,'hrs'),1):'—')+'</td><td class="n">'+(n&&sum(q,'lit')?nf(sum(q,'lit')):'—')+'</td><td class="n">'+(n?vnd(rv):'—')+'</td><td class="n">'+(o.total>0?vnd(Math.round(o.total)):'0')+'</td><td class="n">'+(n&&isFull()?vnd(Math.round(rv-o.total)):'—')+'</td><td class="n">'+(n?nf(rv/n):'—')+'</td><td class="n">'+(n&&o.total>0?nf(o.total/n):'—')+'</td></tr>'; }).join('')+'</tbody></table></div></div>';
+  if(T.length){
+    h+='<h2>Doanh thu theo ngày</h2><div class="panel"><div class="chart"><canvas id="ch-taurev"></canvas></div></div>';
+    h+='<h2>Chi tiết từng dòng biên bản'+(T.length>150?' (150 dòng đầu)':'')+'</h2><div class="panel"><div class="scroll" style="max-height:380px"><table class="tbl"><thead><tr><th>Ngày</th><th>Phương tiện</th><th>Tuyến / mã chuyến</th><th class="n">Khối lượng</th><th class="n">Giờ</th><th class="n">Nhiên liệu (lít)</th><th class="n">Doanh thu (đ)</th><th>Thuyền trưởng / tài xế</th></tr></thead><tbody>'+
+      T.slice().sort((a,b)=>a.d-b.d).slice(0,150).map(r=>'<tr><td>'+r.d+'</td><td>'+xeTag(r.x)+'</td><td>'+esc(r.route)+'</td><td class="n">'+(r.vol?nf(r.vol):'—')+'</td><td class="n">'+(r.hrs?nf(r.hrs,1):'—')+'</td><td class="n">'+(r.lit?nf(r.lit):'—')+'</td><td class="n">'+(r.amt?vnd(r.amt):'—')+'</td><td>'+esc(r.dr)+'</td></tr>').join('')+'</tbody></table></div></div>';
+  }
+  h+='<h2>Nhập số liệu chuyến của tàu</h2><div class="g2">'+
+    importBox('tau','Nhập từng chuyến của tàu / sà lan','Ngày, Tàu, Tuyến hoặc mã chuyến, Khối lượng, Giờ hoạt động, Doanh thu (đồng), Nhiên liệu (lít), Thuyền trưởng','12/09/2026 &nbsp; SG-104.02 &nbsp; Nhà Bè – Cần Thơ &nbsp; 1.200.000 &nbsp; 18 &nbsp; 85.000.000 &nbsp; 900 &nbsp; Minh','Mỗi dòng là một chuyến. Cột nào chưa có thì để trống. Doanh thu của tàu chỉ nhập ở đây, không nhập ở tab Doanh thu.')+addAssetPanel()+'</div>';
+  return h;
+}
+function cTau(){
+  const T=st.tau.filter(r=>inRange(r.d)); if(!T.length) return;
+  const days=dayList(), xs=[...new Set(T.map(r=>r.x))];
+  mk('ch-taurev',{type:'bar',data:{labels:days,datasets:xs.map(x=>({label:x,backgroundColor:col(x),data:days.map(d=>+(sum(T.filter(r=>r.x===x&&r.d===d),'amt')/1e6).toFixed(2))}))},options:opts({scales:{x:{stacked:true,title:axisTitle('Ngày trong tháng 9')},y:{stacked:true,title:axisTitle('triệu đồng')}}})});
+}
+
+/* ---------- đọc dữ liệu: chi phí, phân công, tàu ---------- */
+PARSERS.cost=function(text){
+  const rows=[],errs=[]; let totals=null;
+  splitLines(text).forEach((c,i)=>{
+    const label=c[0]||'';
+    if(/^(tổng|total)/i.test(label.trim())){ totals={}; CATS.forEach((k,j)=>{ totals[k[0]]=parseNum(c[j+1])||0; }); return; }
+    const m=label.match(PLATE_RE);
+    if(!m){ if(/tài xế|bsk|biển/i.test(label)||!label.trim()) return; errs.push('Dòng '+(i+1)+': không thấy biển số trong "'+label+'"'); return; }
+    const plate=plateFmt(m[0]);
+    const dr=label.replace(m[0],' ').replace(/sà\s*lan|tàu/ig,' ').replace(/[-–—:|,]+/g,' ').replace(/\s+/g,' ').trim();
+    const t=(/sà\s*lan|tàu/i.test(label)||/^SG/.test(normP(plate)))?'tau':'xe';
+    const v={}; CATS.forEach((k,j)=>{ const n=parseNum(c[j+1]); if(n) v[k[0]]=n; });
+    rows.push({x:plate,dr:dr,v:v,t:t});
+  });
+  const pool={};
+  if(totals) CATS.forEach(k=>{ const d=totals[k[0]]-sum(rows,r=>(r.v[k[0]]||0)); if(d>0.5) pool[k[0]]=Math.round(d); });
+  return {rows:rows,errs:errs,pool:pool};
+};
+PARSERS.assign=function(text){
+  const rows=[],errs=[];
+  splitLines(text).forEach((c,i)=>{
+    const x=matchAsset(c[0]); if(!x){ if(i===0) return; errs.push('Dòng '+(i+1)+': không khớp phương tiện "'+(c[0]||'')+'"'); return; }
+    const dr=(c[1]||'').trim(); if(!dr){ errs.push('Dòng '+(i+1)+': thiếu tên tài xế'); return; }
+    const a=c[2]?parseDay(c[2]):null, b=c[3]?parseDay(c[3]):null;
+    if((a&&a.e)||(b&&b.e)){ errs.push('Dòng '+(i+1)+': ngày không hợp lệ'); return; }
+    rows.push({x:x,dr:dr,from:a?a.d:(b?1:null),to:b?b.d:(a?MAXD:null)});
+  });
+  return {rows:rows,errs:errs};
+};
+PARSERS.tau=function(text){
+  const rows=[],errs=[];
+  splitLines(text).forEach((c0,i)=>{
+    const c=lead(c0); if(i===0&&isHeader(c)) return;
+    const x=matchAsset(c[1]); if(!x){ errs.push('Dòng '+(i+1)+': không khớp phương tiện "'+(c[1]||'')+'"'); return; }
+    if((assetOf(x)||{}).t!=='tau'){ errs.push('Dòng '+(i+1)+': '+x+' không phải tàu, nhập ở tab Doanh thu'); return; }
+    const p=parseDay(c[0]); if(p.e){ errs.push('Dòng '+(i+1)+': '+p.e); return; }
+    const vol=parseNum(c[3])||0, hrs=parseNum(c[4])||0, amt=parseNum(c[5])||0, lit=parseNum(c[6])||0;
+    if(!(vol>0||hrs>0||amt>0)){ errs.push('Dòng '+(i+1)+': chưa có khối lượng, giờ hoặc doanh thu'); return; }
+    rows.push({d:p.d,x:x,route:c[2]||'',vol:vol,hrs:hrs,amt:amt,lit:lit,dr:(c[7]||'').trim()});
+  });
+  return {rows:rows,errs:errs};
+};
+
+/* ---------- khung chính ---------- */
+const TABS=[['tong','Tổng quan'],['km','Quãng đường'],['time','Thời gian và nghỉ'],['fuel','Nhiên liệu'],['cost','Chi phí'],['rev','Doanh thu'],['drv','Tài xế'],['inc','Thu nhập tài xế'],['tau','Tàu / Sà lan'],['data','Dữ liệu và cách tính']];
+const VIEWS={tong:[vTong,cTong],km:[vKm,cKm],time:[vTime,cTime],fuel:[vFuel,cFuel],cost:[vCost,cCost],rev:[vRev,cRev],drv:[vDrv,cDrv],inc:[vInc,cInc],tau:[vTau,cTau],data:[vData,null]};
+
+function renderFilters(){
+  const el=document.getElementById('filters');
+  const dOpt=(v)=>Array.from({length:MAXD},(_,i)=>'<option value="'+(i+1)+'"'+(i+1===v?' selected':'')+'>'+(i+1)+'</option>').join('');
+  el.innerHTML=
+   '<div class="f-group"><span>Xe</span><div class="chips">'+XE.map(x=>'<button class="chip" style="--c:'+col(x)+'" data-act="xe" data-x="'+esc(x)+'" aria-pressed="'+st.sel.has(x)+'"><i></i>'+esc(x)+'</button>').join('')+'</div></div>'+
+   '<div class="f-group"><span>Khoảng ngày (tháng 9)</span><div class="f-inline"><select id="from" aria-label="Từ ngày">'+dOpt(st.from)+'</select><span>đến</span><select id="to" aria-label="Đến ngày">'+dOpt(st.to)+'</select></div></div>'+
+   '<div class="f-group"><span>Ngưỡng tính là ngày chạy (km)</span><div class="f-inline"><input type="number" id="thr" min="0" step="1" value="'+st.thr+'"></div></div>'+
+   '<div class="f-group"><button class="btn ghost" data-act="reset">Đặt lại bộ lọc</button></div>';
+}
+function renderTabs(){
+  document.getElementById('tabs').innerHTML=TABS.map(t=>{
+    const dot=(t[0]==='fuel'&&getFuel().length)||(t[0]==='rev'&&getRev().length)?'<span class="dot" title="Đã có dữ liệu"></span>':'';
+    return '<button class="tab" role="tab" data-act="tab" data-t="'+t[0]+'" aria-selected="'+(st.tab===t[0])+'">'+t[1]+dot+'</button>';
+  }).join('');
+}
+function renderBanner(){
+  document.getElementById('banner').innerHTML=st.demo?'<div class="banner"><span>Đang hiển thị dữ liệu mẫu cho nhiên liệu, doanh thu và điểm dừng. Đây là số giả lập để xem giao diện, không dùng để báo cáo.</span><button class="btn" data-act="demo">Tắt dữ liệu mẫu</button></div>':'';
+  document.getElementById('btnDemo').textContent=st.demo?'Tắt dữ liệu mẫu':'Xem thử với dữ liệu mẫu';
+}
+function render(keepScroll){
+  const y=window.scrollY;
+  kill(); renderBanner(); renderFilters(); renderTabs();
+  const v=VIEWS[st.tab]; document.getElementById('view').innerHTML=v[0]();
+  if(v[1]) v[1]();
+  if(keepScroll) window.scrollTo(0,y);
+}
+
+/* ---------- sự kiện ---------- */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]'); if(!b) return; const a=b.dataset.act;
+  if(a==='tab'){ st.tab=b.dataset.t; render(); window.scrollTo(0,0); }
+  else if(a==='xe'){ const x=b.dataset.x; if(st.sel.has(x)) st.sel.delete(x); else st.sel.add(x); render(true); }
+  else if(a==='reset'){ st.sel=new Set(XE); st.from=1; st.to=MAXD; st.thr=5; render(true); }
+  else if(a==='pick'){ st.pick={x:b.dataset.x,d:+b.dataset.d}; render(true); }
+  else if(a==='sort'){ const k=b.dataset.k; st.sort=st.sort.k===k?{k,dir:-st.sort.dir}:{k,dir:k==='x'?1:-1}; render(true); }
+  else if(a==='tmode'){ st.timeMode=b.dataset.m; render(true); }
+  else if(a==='demo'){ st.demo=!st.demo; render(true); }
+  else if(a==='present'){ try{ if(document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); }catch(err){} document.documentElement.classList.toggle('present'); }
+  else if(a==='apply'||a==='append'){ doImport(b.dataset.kind,a==='append'); }
+  else if(a==='clear'){ const k=b.dataset.kind; st[k]=[]; save(k,[]); if(k==='cost'){ st.pool={}; save('pool',{}); } st.msg[k]={ok:true,t:'Đã xóa dữ liệu đã nhập.'}; render(true); }
+  else if(a==='restorerev'){ st.rev=clone(BASE_REV); save('rev',st.rev); st.tau=clone(BASE_TAU); save('tau',st.tau); st.demo=false; st.msg.rev={ok:true,t:'Đã khôi phục bảng kê doanh thu tháng 9 của xe bồn ('+sum(st.rev,tn)+' chuyến) và sà lan ('+sum(st.tau,tn)+' chuyến).'}; render(true); }
+  else if(a==='payreset'){ st.pay=clone(BASE_PAY); save('pay',st.pay); render(true); }
+  else if(a==='restore'){ st.cost=clone(BASE_COST); st.pool=clone(BASE_POOL); st.assign=clone(BASE_ASSIGN); save('cost',st.cost); save('pool',st.pool); save('assign',st.assign); st.msg.cost={ok:true,t:'Đã khôi phục số liệu chi phí tháng 9 và phân công tài xế nhập sẵn.'}; render(true); }
+  else if(a==='addasset'){
+    const x=plateFmt((document.getElementById('addx')||{}).value||''); const t=(document.getElementById('addt')||{}).value||'xe';
+    if(!x) st.msg.asset={ok:false,t:'Nhập biển số hoặc ký hiệu phương tiện.'};
+    else if(matchAsset(x)) st.msg.asset={ok:false,t:'Phương tiện '+esc(x)+' đã có trong danh sách.'};
+    else { st.extra.push({x:x,t:t}); save('extra',st.extra); st.msg.asset={ok:true,t:'Đã thêm '+esc(x)+'.'}; }
+    render(true);
+  }
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='from'){ st.from=+t.value; if(st.from>st.to) st.to=st.from; render(true); }
+  else if(t.id==='to'){ st.to=+t.value; if(st.to<st.from) st.from=st.to; render(true); }
+  else if(t.id==='thr'){ st.thr=Math.max(0,+t.value||0); render(true); }
+  else if(t.dataset&&t.dataset.pool){ const v=parseNum(t.value)||0; if(v>0) st.pool[t.dataset.pool]=v; else delete st.pool[t.dataset.pool]; save('pool',st.pool); render(true); }
+  else if(t.dataset&&t.dataset.pay){ const v=parseNum(t.value), k=t.dataset.pay; if(v!=null&&v>=0){ if(k==='base'||k==='minKm') st.pay[k]=v; else if(k.indexOf('lim')===0) st.pay.lim[+k.slice(3)]=v; else if(k.indexOf('amt')===0) st.pay.amt[+k.slice(3)]=v; save('pay',st.pay); } render(true); }
+  else if(t.id==='price'){ const v=parseNum(t.value)||0; st.price=v; save('price',v); render(true); }
+  else if(t.dataset&&t.dataset.act==='settype'){ const e2=st.evt[+t.dataset.i]; if(e2){ e2.t=t.value; e2.auto=false; save('evt',st.evt); render(true); } }
+});
+document.addEventListener('input',e=>{ const t=e.target; if(t.tagName==='TEXTAREA'&&t.dataset.kind) st.draft[t.dataset.kind]=t.value; });
+function doImport(kind,append){
+  const text=st.draft[kind]||''; const res=PARSERS[kind](text);
+  if(!res.rows.length){ st.msg[kind]={ok:false,t:'Chưa đọc được dòng nào. '+esc(res.errs[0]||'Hãy dán dữ liệu từ Excel rồi bấm lại.')}; render(true); return; }
+  st.demo=false;
+  let base=append?st[kind]:[];
+  if(kind==='assign'&&!append){ const xs=new Set(res.rows.map(r=>r.x)); base=st.assign.filter(a=>!xs.has(a.x)); }
+  st[kind]=base.concat(res.rows); save(kind,st[kind]); st.draft[kind]='';
+  let extra='';
+  if(kind==='cost'){
+    const pool=append?Object.assign({},st.pool):{}; Object.keys(res.pool||{}).forEach(k=>{ pool[k]=res.pool[k]; }); st.pool=pool; save('pool',pool);
+    const added=[]; res.rows.forEach(r=>{ if(!matchAsset(r.x)){ st.extra.push({x:r.x,t:r.t}); added.push(r.x); } });
+    if(added.length){ save('extra',st.extra); extra+=' Đã thêm phương tiện mới: '+added.map(esc).join(', ')+'.'; }
+    const pk=Object.keys(res.pool||{}); if(pk.length) extra+=' Số tổng chưa có chi tiết từng xe ('+pk.map(k=>CATS.find(c=>c[0]===k)[1]).join(', ')+') sẽ được chia theo km.';
+  }
+  st.msg[kind]={ok:true,t:'Đã đọc '+res.rows.length+' dòng'+(res.errs.length?'; bỏ qua '+res.errs.length+' dòng: '+res.errs.slice(0,4).map(esc).join('; ')+(res.errs.length>4?'…':''):'.')+extra};
+  render(true);
+}
+const mq=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;
+if(mq&&mq.addEventListener) mq.addEventListener('change',()=>render(true));
+new MutationObserver(()=>render(true)).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+render();
+})();
+</script>
+</body>
+</html>
